@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAULT — Insights</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Outfit:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ══════════════════════════════════════════════════
+       CSS VARIABLES
+    ══════════════════════════════════════════════════ */
+    :root {
+      --bg:            #EFEFEF;
+      --black:         #0A0A0A;
+      --white:         #FFFFFF;
+      --neon-green:    #BAFF00;
+      --yellow:        #FFE500;
+      --hot-pink:      #FF2D78;
+      --electric-blue: #00D4FF;
+      --orange:        #FF6B00;
+      --cyan:          #00FFFF;
+      --purple:        #C084FC;
+      --red:           #FF3333;
+
+      --border:        4px solid #0A0A0A;
+      --border-3:      3px solid #0A0A0A;
+      --border-2:      2px solid #0A0A0A;
+
+      --shadow-sm:     4px  4px  0 0 #0A0A0A;
+      --shadow-md:     6px  6px  0 0 #0A0A0A;
+      --shadow-lg:     10px 10px 0 0 #0A0A0A;
+      --shadow-xl:     14px 14px 0 0 #0A0A0A;
+
+      --radius: 6px;
+    }
+
+    /* ══════════════════════════════════════════════════
+       RESET
+    ══════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ══════════════════════════════════════════════════
+       DOT-GRID BODY
+    ══════════════════════════════════════════════════ */
+    body {
+      font-family: 'Outfit', sans-serif;
+      color: var(--black);
+      min-height: 100vh;
+      padding: 20px;
+
+      /* Dot-grid drafting board */
+      background-color: var(--bg);
+      background-image: radial-gradient(circle, rgba(0,0,0,0.18) 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+
+    /* noise layer */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ══════════════════════════════════════════════════
+       TYPOGRAPHY UTILS
+    ══════════════════════════════════════════════════ */
+    .display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; }
+    .mono    { font-family: 'DM Mono', monospace; }
+
+    /* Highlighter mark — like a physical yellow highlighter */
+    mark {
+      background: var(--yellow);
+      color: var(--black);
+      padding: 0 3px;
+      border-radius: 2px;
+      font-style: inherit;
+      font-weight: inherit;
+    }
+    mark.pink  { background: var(--hot-pink);      color: var(--white); }
+    mark.green { background: var(--neon-green);    color: var(--black); }
+    mark.cyan  { background: var(--electric-blue); color: var(--black); }
+
+    /* ══════════════════════════════════════════════════
+       PAGE WRAPPER
+    ══════════════════════════════════════════════════ */
+    .page-wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0; /* we handle gaps manually for overlaps */
+    }
+
+    /* ══════════════════════════════════════════════════
+       HEADER
+    ══════════════════════════════════════════════════ */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: var(--black);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+    }
+
+    .site-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--neon-green);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+    .site-logo span { color: var(--yellow); }
+
+    .nav-pills { display: flex; gap: 10px; list-style: none; }
+    .nav-pills a {
+      display: inline-block;
+      padding: 6px 14px;
+      border: 3px solid var(--white);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--white);
+      transition: background .1s, color .1s;
+    }
+    .nav-pills a:hover  { background: var(--neon-green); color: var(--black); border-color: var(--neon-green); }
+    .nav-pills a.active { background: var(--cyan); color: var(--black); border-color: var(--cyan); }
+
+    .header-badge {
+      background: var(--cyan);
+      color: var(--black);
+      font-size: 0.65rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 3px solid var(--black);
+    }
+
+    /* ══════════════════════════════════════════════════
+       SECTION SPACING HELPERS (flying papers overlap)
+    ══════════════════════════════════════════════════ */
+    .mt-24 { margin-top: 24px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-neg { margin-top: -20px; }   /* overlapping scatter */
+    .ml-neg { margin-left: -10px; }
+
+    /* ══════════════════════════════════════════════════
+       ██  HERO CARD — BIG REVEAL + BAR CHART
+    ══════════════════════════════════════════════════ */
+    .hero-card {
+      background: var(--black);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-xl);
+      padding: 36px 36px 28px;
+      position: relative;
+      overflow: hidden;
+      transform: rotate(-0.3deg);
+    }
+
+    /* Tape strip */
+    .hero-card::before {
+      content: '✦ WEEKLY INSIGHT ✦ WEEKLY INSIGHT ✦ WEEKLY INSIGHT ✦ WEEKLY INSIGHT ✦ WEEKLY INSIGHT ✦';
+      position: absolute;
+      top: 14px; left: -10px; right: -10px;
+      background: var(--hot-pink);
+      color: var(--white);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.52rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 5px 0;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+      padding-top: 24px;
+    }
+
+    @media (max-width: 860px) { .hero-inner { grid-template-columns: 1fr; } }
+
+    /* ── Left: Headline ── */
+    /* .hero-left { } */
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--hot-pink);
+      margin-bottom: 14px;
+    }
+
+    .hero-headline {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+      font-weight: 900;
+      font-style: italic;
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 22px;
+    }
+
+    .hero-headline mark {
+      display: inline;
+      font-style: italic;
+    }
+
+    .hero-stat-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-pill {
+      padding: 6px 16px;
+      border: var(--border-3);
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .hero-pill.p-green { background: var(--neon-green); color: var(--black); box-shadow: 3px 3px 0 0 #0A0A0A; }
+    .hero-pill.p-pink  { background: var(--hot-pink);   color: var(--white); box-shadow: 3px 3px 0 0 #0A0A0A; }
+    .hero-pill.p-cyan  { background: var(--cyan);       color: var(--black); box-shadow: 3px 3px 0 0 #0A0A0A; }
+
+    /* ── Right: CSS-Only Bar Chart ── */
+    /* .hero-right { } */
+
+    .chart-label-top {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      color: var(--white);
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      opacity: 0.7;
+    }
+
+    /*
+     * ════════════════════════════════════
+     * CSS-ONLY FLEXBOX BAR CHART
+     * Change bar height by setting --h on
+     * each .bar element via style attribute:
+     *   style="--h: 65%"
+     * ════════════════════════════════════
+     */
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;    /* bars grow upward from baseline */
+      gap: 8px;
+      height: 200px;            /* chart canvas height */
+      padding-bottom: 32px;     /* room for x-axis labels */
+      position: relative;
+      border-left: 3px solid rgba(255,255,255,0.2);
+      border-bottom: 3px solid rgba(255,255,255,0.2);
+    }
+
+    /* horizontal guide lines */
+    .bar-chart::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      top: 0;
+      bottom: 32px;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0%,
+          transparent calc(25% - 1px),
+          rgba(255,255,255,0.07) calc(25% - 1px),
+          rgba(255,255,255,0.07) 25%
+        );
+      pointer-events: none;
+    }
+
+    .bar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      flex: 1;
+      height: 100%;             /* fill the chart canvas */
+      position: relative;
+      padding-bottom: 28px;     /* label space inside col */
+    }
+
+    .bar {
+      width: 100%;
+      /* height driven by CSS custom property --h set inline */
+      height: var(--h, 50%);
+      border: var(--border);
+      border-radius: 4px 4px 0 0;
+      position: relative;
+      transition: height 0.6s cubic-bezier(.22,.61,.36,1),
+                  filter 0.15s;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .bar:hover { filter: brightness(1.15); }
+
+    /* value label above bar */
+    .bar::before {
+      content: attr(data-val);
+      position: absolute;
+      top: -26px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--white);
+      white-space: nowrap;
+    }
+
+    /* x-axis label below bar */
+    .bar-xlabel {
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* individual bar colors */
+    .bar.c-green { background: var(--neon-green); }
+    .bar.c-pink  { background: var(--hot-pink); }
+    .bar.c-cyan  { background: var(--cyan); }
+    .bar.c-yellow{ background: var(--yellow); }
+    .bar.c-orange{ background: var(--orange); }
+    .bar.c-purple{ background: var(--purple); }
+    .bar.c-blue  { background: var(--electric-blue); }
+
+    /* "this week" highlight ring */
+    .bar.highlight { box-shadow: 0 0 0 3px var(--white), 0 0 0 6px var(--hot-pink); }
+
+    /* ══════════════════════════════════════════════════
+       ██  ROW: STACK BAR + VIBE CARDS
+    ══════════════════════════════════════════════════ */
+    .mid-row {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 20px;
+      margin-top: 22px;
+    }
+
+    @media (max-width: 900px) { .mid-row { grid-template-columns: 1fr; } }
+
+    /* ══════════════════════════════════════════════════
+       ██  STACK BAR (Spending Breakdown)
+    ══════════════════════════════════════════════════ */
+    .stack-card {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 26px 24px;
+      transform: rotate(0.4deg);
+      position: relative;
+      overflow: visible; /* leader lines need space */
+    }
+
+    .sc-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .sc-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-bottom: 28px;
+    }
+
+    /* The horizontal stack bar */
+    .stack-bar {
+      display: flex;
+      height: 44px;
+      border: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 52px; /* room for leader lines below */
+      position: relative;
+    }
+
+    .seg {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter 0.15s;
+      cursor: pointer;
+      border-right: 3px solid var(--black);
+      flex-shrink: 0;
+    }
+    .seg:last-child { border-right: none; }
+    .seg:hover { filter: brightness(1.12); z-index: 5; }
+
+    .seg.s-green  { background: var(--neon-green); }
+    .seg.s-pink   { background: var(--hot-pink); }
+    .seg.s-yellow { background: var(--yellow); }
+    .seg.s-cyan   { background: var(--electric-blue); }
+    .seg.s-orange { background: var(--orange); }
+    .seg.s-purple { background: var(--purple); }
+
+    .seg-inner-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      color: var(--black);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .seg.s-pink .seg-inner-label,
+    .seg.s-orange .seg-inner-label { color: var(--white); }
+
+    /* Leader line + label below */
+    .seg-leader {
+      position: absolute;
+      bottom: -48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      pointer-events: none;
+      width: max-content;
+    }
+
+    .leader-line {
+      width: 2px;
+      height: 18px;
+      background: var(--black);
+      opacity: 0.5;
+    }
+
+    .leader-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--black);
+      margin-top: -1px;
+    }
+
+    .leader-tag {
+      margin-top: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--black);
+      white-space: nowrap;
+    }
+
+    /* Stack legend row */
+    .stack-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .legend-dot {
+      width: 12px; height: 12px;
+      border: var(--border-2);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════════════════
+       ██  VIBE COMPARISON CARDS
+    ══════════════════════════════════════════════════ */
+    .vibe-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .vibe-card {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .vibe-card.last-month { transform: rotate(-0.7deg); background: var(--white); }
+    .vibe-card.this-month { transform: rotate(0.9deg);  background: var(--black); color: var(--white); margin-top: -10px; }
+
+    .vibe-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-bottom: 6px;
+    }
+    .vibe-card.this-month .vibe-label { color: var(--neon-green); opacity: 1; }
+
+    .vibe-amount {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .vibe-card.this-month .vibe-amount { color: var(--neon-green); }
+
+    .vibe-sub {
+      font-size: 0.7rem;
+      font-weight: 600;
+      opacity: 0.5;
+      font-style: italic;
+      font-family: 'DM Mono', monospace;
+      margin-bottom: 0;
+    }
+
+    /* Giant arrow — bleeds off the edge */
+    .vibe-arrow {
+      position: absolute;
+      right: -12px;
+      bottom: -20px;
+      font-size: 7rem;
+      line-height: 1;
+      opacity: 0.22;
+      font-family: 'Bebas Neue', sans-serif;
+      user-select: none;
+      pointer-events: none;
+    }
+    .vibe-arrow.down { color: #16A34A; opacity: 0.28; }
+    .vibe-arrow.up   { color: var(--hot-pink); opacity: 0.35; }
+
+    .vibe-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border: var(--border-3);
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    .badge-down { background: var(--neon-green); color: var(--black); box-shadow: 3px 3px 0 0 #0A0A0A; }
+    .badge-up   { background: var(--hot-pink);   color: var(--white); box-shadow: 3px 3px 0 0 #0A0A0A; }
+
+    /* ══════════════════════════════════════════════════
+       ██  BOTTOM GRID — Hall of Shame + Side Cards
+    ══════════════════════════════════════════════════ */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      margin-top: 22px;
+    }
+
+    @media (max-width: 900px) { .bottom-grid { grid-template-columns: 1fr; } }
+
+    /* ══════════════════════════════════════════════════
+       ██  HALL OF SHAME / FAME
+    ══════════════════════════════════════════════════ */
+    .hall-card {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 26px 24px;
+      transform: rotate(-0.5deg);
+    }
+
+    .hall-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .hall-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.35;
+      margin-bottom: 24px;
+    }
+
+    .rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .rank-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 16px;
+      border: var(--border-3);
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+
+    .rank-item:nth-child(1) { background: var(--hot-pink); color: var(--white); transform: rotate(-0.4deg); box-shadow: var(--shadow-md); }
+    .rank-item:nth-child(2) { background: var(--yellow);   color: var(--black); transform: rotate(0.5deg);  box-shadow: var(--shadow-sm); }
+    .rank-item:nth-child(3) { background: var(--bg);       color: var(--black); transform: rotate(-0.3deg); box-shadow: var(--shadow-sm); }
+
+    .rank-item:hover { transform: rotate(0deg) scale(1.02) !important; box-shadow: var(--shadow-lg) !important; z-index: 10; }
+
+    /* Giant outlined rank number — behind everything */
+    .rank-num {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 6rem;
+      line-height: 1;
+      -webkit-text-stroke: 3px currentColor;
+      color: transparent;
+      opacity: 0.12;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -2px;
+    }
+
+    .rank-icon-box {
+      width: 52px; height: 52px;
+      border: var(--border-3);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.3);
+      box-shadow: 3px 3px 0 0 rgba(0,0,0,0.25);
+    }
+
+    .rank-info { flex: 1; }
+
+    .rank-pos {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-bottom: 2px;
+    }
+
+    .rank-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+
+    .rank-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      opacity: 0.65;
+      font-style: italic;
+      margin-top: 3px;
+    }
+
+    .rank-amount {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: -1px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .rank-pct-bar {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: rgba(0,0,0,0.15);
+    }
+    .rank-pct-fill {
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+    }
+
+    /* ══════════════════════════════════════════════════
+       ██  SIDE CARDS (right column)
+    ══════════════════════════════════════════════════ */
+    .side-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Prediction Card */
+    .predict-card {
+      background: var(--neon-green);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 22px 20px;
+      transform: rotate(0.6deg);
+    }
+
+    .predict-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.55;
+      margin-bottom: 8px;
+    }
+
+    .predict-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .predict-body {
+      font-size: 0.82rem;
+      font-weight: 700;
+      font-style: italic;
+      line-height: 1.5;
+      opacity: 0.8;
+    }
+
+    .predict-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      line-height: 1;
+      letter-spacing: -1px;
+      margin: 10px 0 4px;
+    }
+
+    .predict-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+
+    /* Streak Card */
+    .streak-card {
+      background: var(--black);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 22px 20px;
+      transform: rotate(-0.5deg);
+      margin-top: -8px; /* slight overlap */
+    }
+
+    .streak-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--neon-green);
+      margin-bottom: 8px;
+    }
+
+    .streak-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+
+    .streak-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+
+    .streak-day {
+      aspect-ratio: 1;
+      border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.45rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+    }
+    .streak-day.good    { background: var(--neon-green); border-color: var(--neon-green); color: var(--black); }
+    .streak-day.bad     { background: var(--hot-pink);   border-color: var(--hot-pink);   color: var(--white); }
+    .streak-day.neutral { background: rgba(255,255,255,0.08); }
+
+    /* AI Tip Card */
+    .tip-card {
+      background: var(--hot-pink);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+      transform: rotate(0.4deg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tip-card::after {
+      content: '💡';
+      position: absolute;
+      bottom: -10px;
+      right: 10px;
+      font-size: 5rem;
+      opacity: 0.12;
+    }
+
+    .tip-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 8px;
+    }
+
+    .tip-text {
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.5;
+    }
+
+    .tip-cta {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 7px 16px;
+      background: var(--white);
+      color: var(--black);
+      border: var(--border-3);
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+    .tip-cta:hover { transform: translate(-1px,-1px); box-shadow: var(--shadow-md); }
+
+    /* ══════════════════════════════════════════════════
+       ██  SECOND BAR CHART SECTION (weekly spend trend)
+    ══════════════════════════════════════════════════ */
+    .trend-section {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 20px;
+    }
+
+    @media (max-width: 860px) { .trend-section { grid-template-columns: 1fr; } }
+
+    .trend-card {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 26px 24px;
+      transform: rotate(0.3deg);
+    }
+
+    .trend-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem;
+      margin-bottom: 4px;
+    }
+
+    .trend-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.35;
+      margin-bottom: 20px;
+    }
+
+    /* Reusable bar chart on light background */
+    .bar-chart.light {
+      border-left-color: rgba(0,0,0,0.15);
+      border-bottom-color: rgba(0,0,0,0.15);
+    }
+
+    .bar-chart.light::before {
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent calc(25% - 1px),
+        rgba(0,0,0,0.05) calc(25% - 1px),
+        rgba(0,0,0,0.05) 25%
+      );
+    }
+
+    .bar-chart.light .bar::before { color: var(--black); }
+    .bar-chart.light .bar-xlabel  { color: rgba(0,0,0,0.4); }
+
+    /* Y-axis labels */
+    .y-labels {
+      position: absolute;
+      left: -38px;
+      top: 0;
+      bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.5rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.35);
+    }
+    .bar-chart.light .y-labels { color: rgba(0,0,0,0.3); }
+
+    /* Heatmap mini-card */
+    .heatmap-card {
+      background: var(--yellow);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 22px 20px;
+      transform: rotate(-0.6deg);
+      margin-top: 0;
+    }
+
+    .heatmap-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 14px;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .hm-cell {
+      border: var(--border-2);
+      border-radius: 3px;
+      padding: 8px 6px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: default;
+      transition: transform 0.1s;
+    }
+    .hm-cell:hover { transform: scale(1.08); }
+
+    .hm-cell .hm-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      display: block;
+      letter-spacing: -0.5px;
+    }
+
+    .hm-low    { background: #d4f9a0; }
+    .hm-mid    { background: var(--neon-green); }
+    .hm-high   { background: var(--orange); color: var(--white); }
+    .hm-extreme{ background: var(--red); color: var(--white); }
+
+    /* ══════════════════════════════════════════════════
+       ██  FOOTER
+    ══════════════════════════════════════════════════ */
+    .site-footer {
+      background: var(--black);
+      color: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      font-weight: 600;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--neon-green);
+    }
+
+    /* ══════════════════════════════════════════════════
+       ██  PERIOD TOGGLE
+    ══════════════════════════════════════════════════ */
+    .period-toggle {
+      display: flex;
+      gap: 0;
+      border: var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pt-btn {
+      padding: 7px 18px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      border-right: 3px solid var(--black);
+      background: var(--bg);
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+    .pt-btn:last-child { border-right: none; }
+    .pt-btn.active, .pt-btn:hover { background: var(--black); color: var(--neon-green); }
+
+    /* ══════════════════════════════════════════════════
+       ██  TOAST
+    ══════════════════════════════════════════════════ */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      right: 24px;
+      background: var(--black);
+      color: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 12px 22px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      font-family: 'DM Mono', monospace;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ══════════════════════════════════════════════════
+       STAGGER ENTRANCE ANIMATION
+    ══════════════════════════════════════════════════ */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(22px) rotate(var(--rot, 0deg)); }
+      to   { opacity: 1; transform: translateY(0)    rotate(var(--rot, 0deg)); }
+    }
+
+    .hero-card          { --rot: -0.3deg; animation: riseIn 0.5s ease both;       animation-delay: 0.05s; }
+    .stack-card         { --rot:  0.4deg; animation: riseIn 0.5s ease both;       animation-delay: 0.15s; }
+    .vibe-card          {                 animation: riseIn 0.5s ease both;       animation-delay: 0.20s; }
+    .hall-card          { --rot: -0.5deg; animation: riseIn 0.5s ease both;       animation-delay: 0.25s; }
+    .predict-card       { --rot:  0.6deg; animation: riseIn 0.5s ease both;       animation-delay: 0.30s; }
+    .streak-card        { --rot: -0.5deg; animation: riseIn 0.5s ease both;       animation-delay: 0.35s; }
+    .tip-card           { --rot:  0.4deg; animation: riseIn 0.5s ease both;       animation-delay: 0.40s; }
+    .trend-card         { --rot:  0.3deg; animation: riseIn 0.5s ease both;       animation-delay: 0.45s; }
+    .heatmap-card       { --rot: -0.6deg; animation: riseIn 0.5s ease both;       animation-delay: 0.50s; }
+
+    /* bar grow-up animation */
+    @keyframes barGrow {
+      from { height: 0 !important; }
+      to   { height: var(--h, 50%); }
+    }
+
+    .bar { animation: barGrow 0.8s cubic-bezier(.22,.61,.36,1) both; }
+    .bar-col:nth-child(1) .bar { animation-delay: 0.1s; }
+    .bar-col:nth-child(2) .bar { animation-delay: 0.15s; }
+    .bar-col:nth-child(3) .bar { animation-delay: 0.20s; }
+    .bar-col:nth-child(4) .bar { animation-delay: 0.25s; }
+    .bar-col:nth-child(5) .bar { animation-delay: 0.30s; }
+    .bar-col:nth-child(6) .bar { animation-delay: 0.35s; }
+    .bar-col:nth-child(7) .bar { animation-delay: 0.40s; }
+    .bar-col:nth-child(8) .bar { animation-delay: 0.45s; }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ══════════════════════════════════
+       HEADER
+  ══════════════════════════════════ -->
+  <header class="site-header">
+    <a href="index.html" class="site-logo">VAULT<span>.</span></a>
+    <nav aria-label="Primary navigation">
+      <ul class="nav-pills">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="transactions.html">Transactions</a></li>
+        <li><a href="budget.html">Budget</a></li>
+        <li><a href="insights.html" class="active">Insights</a></li>
+      </ul>
+    </nav>
+    <span class="header-badge">● Feb 2026</span>
+  </header>
+
+
+  <!-- ══════════════════════════════════
+       ██ HERO CARD — BIG REVEAL + BAR CHART
+  ══════════════════════════════════ -->
+  <section class="hero-card" aria-label="Main insight">
+    <div class="hero-inner">
+
+      <!-- LEFT: Punchy Headline -->
+      <div class="hero-left">
+        <div class="hero-eyebrow">📊 WEEK-OVER-WEEK · FEB 17–23</div>
+
+        <h1 class="hero-headline">
+          YOU SPENT <mark class="pink">20% MORE</mark><br>
+          ON <mark>COFFEE</mark><br>
+          THIS WEEK.<br>
+          <span style="font-size:0.7em; opacity:0.65;">That's <mark class="cyan">$14</mark> extra
+          you didn't notice.</span>
+        </h1>
+
+        <div class="hero-stat-row">
+          <span class="hero-pill p-green">▼ Food −12%</span>
+          <span class="hero-pill p-pink">▲ Coffee +20%</span>
+          <span class="hero-pill p-cyan">▲ Gaming +8%</span>
+        </div>
+
+        <div style="margin-top: 16px; display:flex; gap:12px; align-items:center;">
+          <div class="period-toggle" role="group" aria-label="Time period">
+            <button class="pt-btn" onclick="setPeriod(this,'7D')">7D</button>
+            <button class="pt-btn active" onclick="setPeriod(this,'MTD')">MTD</button>
+            <button class="pt-btn" onclick="setPeriod(this,'3M')">3M</button>
+            <button class="pt-btn" onclick="setPeriod(this,'YTD')">YTD</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: CSS-Only Bar Chart -->
+      <div class="hero-right">
+        <div class="chart-label-top">Daily Spend — This Week ($)</div>
+
+        <!--
+          ════════════════════════════════════════
+          CSS-ONLY FLEXBOX BAR CHART
+          To adjust a bar: change --h: XX%
+          in the style attribute on .bar
+          ════════════════════════════════════════
+        -->
+        <div class="bar-chart" role="img" aria-label="Daily spending bar chart for the week">
+
+          <!-- Y-axis labels -->
+          <div class="y-labels" aria-hidden="true">
+            <span>$120</span>
+            <span>$90</span>
+            <span>$60</span>
+            <span>$30</span>
+            <span>$0</span>
+          </div>
+
+          <div class="bar-col">
+            <div class="bar c-cyan" style="--h: 38%" data-val="$46" aria-label="Monday: $46"></div>
+            <span class="bar-xlabel" aria-hidden="true">MON</span>
+          </div>
+
+          <div class="bar-col">
+            <div class="bar c-green" style="--h: 24%" data-val="$29" aria-label="Tuesday: $29"></div>
+            <span class="bar-xlabel" aria-hidden="true">TUE</span>
+          </div>
+
+          <div class="bar-col">
+            <div class="bar c-yellow" style="--h: 55%" data-val="$66" aria-label="Wednesday: $66"></div>
+            <span class="bar-xlabel" aria-hidden="true">WED</span>
+          </div>
+
+          <div class="bar-col">
+            <div class="bar c-orange" style="--h: 41%" data-val="$49" aria-label="Thursday: $49"></div>
+            <span class="bar-xlabel" aria-hidden="true">THU</span>
+          </div>
+
+          <div class="bar-col">
+            <div class="bar c-pink highlight" style="--h: 85%" data-val="$102 🔥" aria-label="Friday: $102 — highest spend"></div>
+            <span class="bar-xlabel" aria-hidden="true">FRI</span>
+          </div>
+
+          <div class="bar-col">
+            <div class="bar c-purple" style="--h: 96%" data-val="$115" aria-label="Saturday: $115"></div>
+            <span class="bar-xlabel" aria-hidden="true">SAT</span>
+          </div>
+
+          <div class="bar-col">
+            <div class="bar c-blue" style="--h: 30%" data-val="$36" aria-label="Sunday: $36"></div>
+            <span class="bar-xlabel" aria-hidden="true">SUN</span>
+          </div>
+
+        </div><!-- /bar-chart -->
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       ██ MID ROW: STACK BAR + VIBE CARDS
+  ══════════════════════════════════ -->
+  <div class="mid-row">
+
+    <!-- STACK BAR — Spending Breakdown -->
+    <section class="stack-card" aria-label="Spending breakdown by category">
+      <h2 class="sc-title display">Where It All Goes 🗂</h2>
+      <p class="sc-sub">Feb 2026 · Total $2,580 allocated</p>
+
+      <div class="stack-bar" role="img" aria-label="Stacked bar showing spending categories">
+
+        <!-- Width = % of total spend. Change width to rebalance. -->
+        <div class="seg s-green" style="width:32%">
+          <span class="seg-inner-label">RENT</span>
+          <div class="seg-leader" aria-hidden="true">
+            <div class="leader-line"></div>
+            <div class="leader-dot"></div>
+            <div class="leader-tag">🏠 Rent · 32%</div>
+          </div>
+        </div>
+
+        <div class="seg s-pink" style="width:19%">
+          <span class="seg-inner-label">FOOD</span>
+          <div class="seg-leader" aria-hidden="true">
+            <div class="leader-line"></div>
+            <div class="leader-dot"></div>
+            <div class="leader-tag">🍕 Food · 19%</div>
+          </div>
+        </div>
+
+        <div class="seg s-yellow" style="width:14%">
+          <span class="seg-inner-label">FASHION</span>
+          <div class="seg-leader" aria-hidden="true">
+            <div class="leader-line"></div>
+            <div class="leader-dot"></div>
+            <div class="leader-tag">👟 Fashion · 14%</div>
+          </div>
+        </div>
+
+        <div class="seg s-cyan" style="width:11%">
+          <span class="seg-inner-label">GAMING</span>
+          <div class="seg-leader" aria-hidden="true">
+            <div class="leader-line"></div>
+            <div class="leader-dot"></div>
+            <div class="leader-tag">🎮 Gaming · 11%</div>
+          </div>
+        </div>
+
+        <div class="seg s-orange" style="width:9%">
+          <span class="seg-inner-label" style="font-size:0.48rem;">TRANSPORT</span>
+          <div class="seg-leader" aria-hidden="true">
+            <div class="leader-line"></div>
+            <div class="leader-dot"></div>
+            <div class="leader-tag">🚇 Transport · 9%</div>
+          </div>
+        </div>
+
+        <div class="seg s-purple" style="width:8%">
+          <div class="seg-leader" aria-hidden="true">
+            <div class="leader-line"></div>
+            <div class="leader-dot"></div>
+            <div class="leader-tag">☕ Coffee · 8%</div>
+          </div>
+        </div>
+
+        <div class="seg" style="width:7%; background:var(--bg); border-right:none;">
+          <div class="seg-leader" aria-hidden="true">
+            <div class="leader-line"></div>
+            <div class="leader-dot"></div>
+            <div class="leader-tag">🎵 Other · 7%</div>
+          </div>
+        </div>
+
+      </div><!-- /stack-bar -->
+
+      <div class="stack-legend" aria-label="Legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--neon-green);"></div>Rent</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--hot-pink);"></div>Food</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--yellow);"></div>Fashion</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--electric-blue);"></div>Gaming</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--orange);"></div>Transport</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--purple);"></div>Coffee</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--bg); border:var(--border-2);"></div>Other</div>
+      </div>
+    </section>
+
+    <!-- VIBE COMPARISON CARDS -->
+    <div class="vibe-col" aria-label="Month comparison">
+
+      <!-- Last Month -->
+      <div class="vibe-card last-month">
+        <div class="vibe-label">Last Month — Jan 2026</div>
+        <div class="vibe-amount">$1,104</div>
+        <div class="vibe-sub">total spent</div>
+
+        <div class="vibe-arrow down" aria-hidden="true">▼</div>
+
+        <div class="vibe-badge badge-down">▼ DOWN $270 vs NOW</div>
+
+        <div style="margin-top:10px; font-style:italic; font-size:0.75rem; opacity:0.6; font-family:'DM Mono',monospace;">
+          Jan was 24% cheaper — <mark>you were killing it.</mark>
+        </div>
+      </div>
+
+      <!-- This Month -->
+      <div class="vibe-card this-month">
+        <div class="vibe-label">This Month — Feb 2026</div>
+        <div class="vibe-amount">$1,374</div>
+        <div class="vibe-sub" style="color:rgba(255,255,255,0.45);">total spent so far</div>
+
+        <div class="vibe-arrow up" aria-hidden="true">▲</div>
+
+        <div class="vibe-badge badge-up">▲ UP $270 vs JAN</div>
+
+        <div style="margin-top:10px; font-style:italic; font-size:0.75rem; color:rgba(255,255,255,0.55); font-family:'DM Mono',monospace;">
+          6 days left. Projected end: <mark class="pink">$1,640</mark>
+        </div>
+      </div>
+
+    </div><!-- /vibe-col -->
+
+  </div><!-- /mid-row -->
+
+
+  <!-- ══════════════════════════════════
+       ██ BOTTOM: HALL OF SHAME + SIDE CARDS
+  ══════════════════════════════════ -->
+  <div class="bottom-grid">
+
+    <!-- HALL OF SHAME / FAME -->
+    <section class="hall-card" aria-label="Top spending categories">
+      <h2 class="hall-title display">Hall of <mark>Shame</mark> 🏆</h2>
+      <p class="hall-sub">Top 3 budget drainers · Feb 2026</p>
+
+      <div class="rank-list">
+
+        <!-- Rank 1 -->
+        <div class="rank-item" role="listitem" onclick="showToast('🏠 Rent: $1,600 — Fixed cost. Nothing to do here.')" tabindex="0">
+          <div class="rank-num" aria-hidden="true">1</div>
+          <div class="rank-icon-box" aria-hidden="true">🏠</div>
+          <div class="rank-info">
+            <div class="rank-pos">🥇 #1 Biggest Drain</div>
+            <div class="rank-name display">RENT</div>
+            <div class="rank-meta">Fixed · Monthly · Unavoidable</div>
+          </div>
+          <div class="rank-amount">$1,600</div>
+          <div class="rank-pct-bar"><div class="rank-pct-fill" style="width:100%;"></div></div>
+        </div>
+
+        <!-- Rank 2 -->
+        <div class="rank-item" role="listitem" onclick="showToast('🍕 Food: $360 spent — $140 left in budget.')" tabindex="0">
+          <div class="rank-num" aria-hidden="true">2</div>
+          <div class="rank-icon-box" aria-hidden="true">🍕</div>
+          <div class="rank-info">
+            <div class="rank-pos">🥈 #2 Biggest Drain</div>
+            <div class="rank-name display">FOOD</div>
+            <div class="rank-meta">72% of $500 budget used</div>
+          </div>
+          <div class="rank-amount">$360</div>
+          <div class="rank-pct-bar"><div class="rank-pct-fill" style="width:72%;"></div></div>
+        </div>
+
+        <!-- Rank 3 -->
+        <div class="rank-item" role="listitem" onclick="showToast('👟 Fashion: $374 — $74 OVER your $300 limit! 🚨')" tabindex="0">
+          <div class="rank-num" aria-hidden="true">3</div>
+          <div class="rank-icon-box" aria-hidden="true">👟</div>
+          <div class="rank-info">
+            <div class="rank-pos">🥉 #3 · OVER BUDGET 🔥</div>
+            <div class="rank-name display">FASHION</div>
+            <div class="rank-meta" style="color:var(--black); font-style:italic;">$74 OVER your $300 limit</div>
+          </div>
+          <div class="rank-amount">$374</div>
+          <div class="rank-pct-bar"><div class="rank-pct-fill" style="width:100%; background:rgba(0,0,0,0.5);"></div></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SIDE CARDS -->
+    <div class="side-col">
+
+      <!-- Prediction Card -->
+      <div class="predict-card" aria-label="End-of-month prediction">
+        <div class="predict-eyebrow">🔮 End-Of-Month Forecast</div>
+        <h3 class="predict-title display">You'll end at…</h3>
+        <div class="predict-num display">$1,640</div>
+        <div class="predict-sub">Projected total spend</div>
+        <p class="predict-body" style="margin-top:10px;">
+          Based on your last 7-day average of <strong>$63/day</strong>,
+          you're on track to spend <mark>$536 more</mark> by month-end.
+        </p>
+      </div>
+
+      <!-- Streak Card -->
+      <div class="streak-card" aria-label="Under-budget days this month">
+        <div class="streak-eyebrow">🔥 Under-Budget Streak</div>
+        <h3 class="streak-title display">Feb · Daily Log</h3>
+        <div class="streak-grid" aria-label="Calendar showing good and bad spending days">
+          <div class="streak-day good"  title="Feb 1">1</div>
+          <div class="streak-day good"  title="Feb 2">2</div>
+          <div class="streak-day good"  title="Feb 3">3</div>
+          <div class="streak-day bad"   title="Feb 4">4</div>
+          <div class="streak-day good"  title="Feb 5">5</div>
+          <div class="streak-day good"  title="Feb 6">6</div>
+          <div class="streak-day good"  title="Feb 7">7</div>
+          <div class="streak-day bad"   title="Feb 8">8</div>
+          <div class="streak-day bad"   title="Feb 9">9</div>
+          <div class="streak-day good"  title="Feb 10">10</div>
+          <div class="streak-day good"  title="Feb 11">11</div>
+          <div class="streak-day good"  title="Feb 12">12</div>
+          <div class="streak-day neutral" title="Feb 13">13</div>
+          <div class="streak-day good"  title="Feb 14">14</div>
+          <div class="streak-day good"  title="Feb 15">15</div>
+          <div class="streak-day bad"   title="Feb 16">16</div>
+          <div class="streak-day bad"   title="Feb 17">17</div>
+          <div class="streak-day good"  title="Feb 18">18</div>
+          <div class="streak-day good"  title="Feb 19">19</div>
+          <div class="streak-day good"  title="Feb 20">20</div>
+          <div class="streak-day good"  title="Feb 21">21</div>
+          <div class="streak-day bad"   title="Feb 22">22</div>
+          <div class="streak-day good"  title="Feb 23 (Today)">23</div>
+          <div class="streak-day"       title="Feb 24">24</div>
+          <div class="streak-day"       title="Feb 25">25</div>
+          <div class="streak-day"       title="Feb 26">26</div>
+          <div class="streak-day"       title="Feb 27">27</div>
+          <div class="streak-day"       title="Feb 28">28</div>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'DM Mono',monospace; font-size:0.55rem; color:rgba(255,255,255,0.5);">
+            <div style="width:10px;height:10px;background:var(--neon-green);border-radius:2px;"></div> Under limit
+          </div>
+          <div style="display:flex; align-items:center; gap:5px; font-family:'DM Mono',monospace; font-size:0.55rem; color:rgba(255,255,255,0.5);">
+            <div style="width:10px;height:10px;background:var(--hot-pink);border-radius:2px;"></div> Over limit
+          </div>
+          <div style="display:flex; align-items:center; gap:5px; font-family:'DM Mono',monospace; font-size:0.55rem; color:rgba(255,255,255,0.5);">
+            <div style="width:10px;height:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:2px;"></div> No data
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Tip Card -->
+      <div class="tip-card" aria-label="VAULT AI tip">
+        <div class="tip-eyebrow">✨ VAULT AI TIP</div>
+        <p class="tip-text">
+          If you skip one weekend takeout order this month, you'll stay under your Food budget
+          <mark>and</mark> offset your Fashion overspend. <mark class="pink">$22 saved = the math works.</mark>
+        </p>
+        <button class="tip-cta" onclick="showToast('More tips loading… 🤖')">More Tips →</button>
+      </div>
+
+    </div><!-- /side-col -->
+
+  </div><!-- /bottom-grid -->
+
+
+  <!-- ══════════════════════════════════
+       ██ WEEKLY TREND BAR CHART (light bg)
+  ══════════════════════════════════ -->
+  <div class="trend-section">
+
+    <section class="trend-card" aria-label="4-week spending trend">
+      <h2 class="trend-title display">4-Week Spend Trend 📈</h2>
+      <p class="trend-sub">Comparing weekly totals · Jan–Feb 2026</p>
+
+      <!--
+        ═══════════════════════════════════
+        SECOND CSS-ONLY BAR CHART (light bg)
+        Adjust bars: set --h on each .bar
+        ═══════════════════════════════════
+      -->
+      <div class="bar-chart light" role="img" aria-label="4-week spending trend bar chart" style="height:180px;">
+
+        <div class="y-labels" aria-hidden="true">
+          <span>$500</span>
+          <span>$375</span>
+          <span>$250</span>
+          <span>$125</span>
+          <span>$0</span>
+        </div>
+
+        <!-- Week 1 (Jan 6–12) -->
+        <div class="bar-col">
+          <div class="bar c-cyan" style="--h: 62%" data-val="$310" aria-label="Week 1 Jan 6-12: $310"></div>
+          <span class="bar-xlabel" aria-hidden="true">W1</span>
+        </div>
+
+        <!-- Week 2 (Jan 13–19) -->
+        <div class="bar-col">
+          <div class="bar c-green" style="--h: 44%" data-val="$220" aria-label="Week 2 Jan 13-19: $220"></div>
+          <span class="bar-xlabel" aria-hidden="true">W2</span>
+        </div>
+
+        <!-- Week 3 (Jan 20–26) -->
+        <div class="bar-col">
+          <div class="bar c-yellow" style="--h: 52%" data-val="$260" aria-label="Week 3 Jan 20-26: $260"></div>
+          <span class="bar-xlabel" aria-hidden="true">W3</span>
+        </div>
+
+        <!-- Week 4 (Jan 27 – Feb 2) -->
+        <div class="bar-col">
+          <div class="bar c-orange" style="--h: 64%" data-val="$320" aria-label="Week 4 Jan 27-Feb 2: $320"></div>
+          <span class="bar-xlabel" aria-hidden="true">W4</span>
+        </div>
+
+        <!-- Divider — visual gap between months -->
+        <div style="width:12px; align-self:stretch; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <div style="width:1px; height:calc(100% - 32px); background:var(--black); opacity:0.15;"></div>
+        </div>
+
+        <!-- Week 5 (Feb 3–9) -->
+        <div class="bar-col">
+          <div class="bar c-purple" style="--h: 55%" data-val="$275" aria-label="Week 5 Feb 3-9: $275"></div>
+          <span class="bar-xlabel" aria-hidden="true">W5</span>
+        </div>
+
+        <!-- Week 6 (Feb 10–16) -->
+        <div class="bar-col">
+          <div class="bar c-blue" style="--h: 72%" data-val="$360" aria-label="Week 6 Feb 10-16: $360"></div>
+          <span class="bar-xlabel" aria-hidden="true">W6</span>
+        </div>
+
+        <!-- Week 7 (Feb 17–23) — current, highlighted -->
+        <div class="bar-col">
+          <div class="bar c-pink highlight" style="--h: 89%" data-val="$443 🔥" aria-label="Week 7 Feb 17-23 current: $443 — highest week"></div>
+          <span class="bar-xlabel" aria-hidden="true">W7↑</span>
+        </div>
+
+      </div><!-- /bar-chart light -->
+
+      <div style="margin-top:14px; font-family:'DM Mono',monospace; font-size:0.65rem; font-weight:700; letter-spacing:0.08em; font-style:italic; opacity:0.5;">
+        ↑ Jan avg $278/wk &nbsp;·&nbsp; Feb avg $359/wk &nbsp;·&nbsp; Trend: <mark class="pink" style="font-style:italic;">+29% MoM</mark>
+      </div>
+    </section>
+
+    <!-- HEATMAP CARD -->
+    <section class="heatmap-card" aria-label="Spend heatmap by time of day and day">
+      <h2 class="heatmap-title display">Spend Heatmap 🌡</h2>
+      <p style="font-family:'DM Mono',monospace; font-size:0.58rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; opacity:0.45; margin-bottom:12px;">By Time of Day</p>
+
+      <div class="heatmap-grid" aria-label="Spending intensity grid by time slot">
+
+        <div class="hm-cell hm-low"    title="Morning: Low spend">
+          <span class="hm-val">$18</span>
+          🌅 Morning
+        </div>
+        <div class="hm-cell hm-mid"    title="Lunch: Medium spend">
+          <span class="hm-val">$34</span>
+          🍱 Lunch
+        </div>
+        <div class="hm-cell hm-high"   title="Afternoon: High spend">
+          <span class="hm-val">$62</span>
+          ☀️ Arvo
+        </div>
+        <div class="hm-cell hm-extreme" title="Evening: Extreme spend">
+          <span class="hm-val">$89</span>
+          🌙 Evening
+        </div>
+
+        <div class="hm-cell hm-mid"    title="Weekday: Medium spend">
+          <span class="hm-val">$31</span>
+          📅 Weekday
+        </div>
+        <div class="hm-cell hm-low"    title="Tuesday: Low spend">
+          <span class="hm-val">$22</span>
+          📅 Tue
+        </div>
+        <div class="hm-cell hm-high"   title="Friday: High spend">
+          <span class="hm-val">$74</span>
+          🎉 Friday
+        </div>
+        <div class="hm-cell hm-extreme" title="Weekend: Extreme spend">
+          <span class="hm-val">$94</span>
+          🎊 Weekend
+        </div>
+
+      </div>
+
+      <div style="margin-top:14px; display:flex; gap:6px; align-items:center; font-family:'DM Mono',monospace; font-size:0.56rem; font-weight:700; letter-spacing:0.06em;">
+        <div style="display:flex; gap:4px;">
+          <div style="width:14px;height:10px;background:#d4f9a0;border:1px solid #0A0A0A;"></div>
+          <div style="width:14px;height:10px;background:var(--neon-green);border:1px solid #0A0A0A;"></div>
+          <div style="width:14px;height:10px;background:var(--orange);border:1px solid #0A0A0A;"></div>
+          <div style="width:14px;height:10px;background:var(--red);border:1px solid #0A0A0A;"></div>
+        </div>
+        <span style="opacity:0.5;">Low → High spend intensity</span>
+      </div>
+    </section>
+
+  </div><!-- /trend-section -->
+
+
+  <!-- ══════════════════════════════════
+       FOOTER
+  ══════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-logo">VAULT.</div>
+    <div>© 2026 VAULT — Built for broke &amp; ambitious 💀</div>
+    <div>Privacy · Terms · Support</div>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+<!-- Toast -->
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  /* ── Toast ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  /* ── Period Toggle ── */
+  function setPeriod(btn, label) {
+    btn.closest('.period-toggle').querySelectorAll('.pt-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    showToast(`📅 Showing: ${label} data`);
+  }
+
+  /* ── Bar hover tooltips ── */
+  document.querySelectorAll('.bar').forEach(bar => {
+    bar.addEventListener('click', () => {
+      showToast(`📊 ${bar.getAttribute('aria-label')}`);
+    });
+  });
+
+  /* ── Segment hover tooltips ── */
+  document.querySelectorAll('.seg').forEach(seg => {
+    seg.addEventListener('click', () => {
+      const tag = seg.querySelector('.leader-tag');
+      if (tag) showToast(`💰 ${tag.textContent.trim()}`);
+    });
+  });
+
+  /* ── Rank item keyboard support ── */
+  document.querySelectorAll('.rank-item').forEach(item => {
+    item.addEventListener('keypress', e => {
+      if (e.key === 'Enter' || e.key === ' ') item.click();
+    });
+  });
+</script>
+</body>
+</html>

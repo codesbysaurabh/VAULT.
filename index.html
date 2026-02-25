@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAULT — Your Money, Brutally Honest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─────────────────────────────────────
+       CSS VARIABLES
+    ───────────────────────────────────── */
+    :root {
+      --bg:           #F0F0F0;
+      --black:        #0A0A0A;
+      --white:        #FFFFFF;
+
+      --neon-green:   #BAFF00;
+      --yellow:       #FFE500;
+      --hot-pink:     #FF2D78;
+      --electric-blue:#00D4FF;
+      --orange:       #FF6B00;
+
+      --border-width: 3px;
+      --border-thick: 4px;
+      --border-style: solid;
+      --border:       var(--border-thick) var(--border-style) var(--black);
+
+      --shadow-sm:    4px 4px 0px 0px var(--black);
+      --shadow-md:    6px 6px 0px 0px var(--black);
+      --shadow-lg:    8px 8px 0px 0px var(--black);
+      --shadow-xl:    12px 12px 0px 0px var(--black);
+
+      --radius:       6px;
+      --gap:          16px;
+      --gap-lg:       24px;
+    }
+
+    /* ─────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      font-family: 'Outfit', sans-serif;
+      color: var(--black);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─────────────────────────────────────
+       TYPOGRAPHY UTILITIES
+    ───────────────────────────────────── */
+    .display {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    .mono {
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ─────────────────────────────────────
+       LAYOUT WRAPPER
+    ───────────────────────────────────── */
+    .page-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-lg);
+    }
+
+    /* ─────────────────────────────────────
+       HEADER / NAV
+    ───────────────────────────────────── */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: var(--black);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+    }
+
+    .site-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--neon-green);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+
+    .site-logo span {
+      color: var(--yellow);
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 10px;
+      list-style: none;
+    }
+
+    .nav-pills a {
+      display: inline-block;
+      padding: 6px 14px;
+      border: var(--border-width) solid var(--white);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--white);
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .nav-pills a:hover {
+      background: var(--neon-green);
+      color: var(--black);
+      border-color: var(--neon-green);
+    }
+
+    .nav-pills a.active {
+      background: var(--hot-pink);
+      color: var(--white);
+      border-color: var(--hot-pink);
+    }
+
+    .header-badge {
+      background: var(--neon-green);
+      color: var(--black);
+      font-size: 0.65rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: var(--border-width) solid var(--black);
+    }
+
+    /* ─────────────────────────────────────
+       BENTO GRID
+    ───────────────────────────────────── */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: var(--gap);
+    }
+
+    /* ─────────────────────────────────────
+       CARD BASE
+    ───────────────────────────────────── */
+    .card {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--black);
+      opacity: 0.5;
+      margin-bottom: 8px;
+    }
+
+    /* ─────────────────────────────────────
+       HERO VAULT CARD
+    ───────────────────────────────────── */
+    .hero-card {
+      grid-column: 1 / 8;
+      background: var(--black);
+      color: var(--white);
+      padding: 36px;
+      transform: rotate(-0.8deg);
+    }
+
+    .hero-card .card-label {
+      color: var(--neon-green);
+      opacity: 1;
+    }
+
+    .hero-card .hero-balance {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 9vw, 7.5rem);
+      line-height: 0.9;
+      color: var(--neon-green);
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    .hero-card .hero-balance sup {
+      font-size: 0.35em;
+      vertical-align: super;
+      color: var(--yellow);
+    }
+
+    .balance-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--neon-green);
+      color: var(--black);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: var(--border-width) solid var(--neon-green);
+      margin-bottom: 28px;
+    }
+
+    .balance-change.negative {
+      background: var(--hot-pink);
+      color: var(--white);
+      border-color: var(--hot-pink);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* 3D Physical Button */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.08s, box-shadow 0.08s;
+      outline: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--neon-green);
+      color: var(--black);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-primary:active {
+      transform: translate(4px, 4px);
+      box-shadow: 2px 2px 0 0 var(--black);
+    }
+
+    .btn-secondary {
+      background: var(--hot-pink);
+      color: var(--white);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-secondary:active {
+      transform: translate(4px, 4px);
+      box-shadow: 2px 2px 0 0 var(--black);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      border-color: rgba(255,255,255,0.4);
+      box-shadow: none;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--white);
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.78rem;
+    }
+
+    .btn-lg {
+      padding: 16px 32px;
+      font-size: 1rem;
+    }
+
+    /* ─────────────────────────────────────
+       STREAK / MOOD CARD
+    ───────────────────────────────────── */
+    .streak-card {
+      grid-column: 8 / 13;
+      background: var(--yellow);
+      transform: rotate(0.6deg);
+    }
+
+    .streak-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      line-height: 1;
+      color: var(--black);
+    }
+
+    .streak-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      opacity: 0.7;
+    }
+
+    .streak-dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .streak-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: var(--border);
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: var(--yellow);
+      font-weight: 800;
+    }
+
+    .streak-dot.empty {
+      background: rgba(0,0,0,0.15);
+      color: transparent;
+    }
+
+    .streak-emoji {
+      font-size: 3rem;
+      position: absolute;
+      top: 16px;
+      right: 20px;
+    }
+
+    /* ─────────────────────────────────────
+       SUMMARY STAT CARDS
+    ───────────────────────────────────── */
+    .stat-card {
+      grid-column: span 3;
+    }
+
+    .stat-card:nth-child(1) { background: var(--hot-pink); color: var(--white); }
+    .stat-card:nth-child(2) { background: var(--electric-blue); transform: rotate(0.5deg); }
+    .stat-card:nth-child(3) { background: var(--neon-green); transform: rotate(-0.4deg); }
+    .stat-card:nth-child(4) { background: var(--orange); color: var(--white); transform: rotate(0.3deg); }
+
+    .stat-card .card-label { opacity: 0.7; }
+    .stat-card:nth-child(1) .card-label,
+    .stat-card:nth-child(4) .card-label { color: rgba(255,255,255,0.8); opacity: 1; }
+
+    .stat-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.6rem;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-sub {
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 0.65;
+    }
+
+    .stat-card:hover {
+      transform: translate(-2px, -2px) rotate(-0.4deg);
+      box-shadow: var(--shadow-xl);
+      cursor: pointer;
+    }
+
+    .stat-card:active {
+      transform: translate(3px, 3px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ─────────────────────────────────────
+       TRANSACTION LIST CARD
+    ───────────────────────────────────── */
+    .transactions-card {
+      grid-column: 1 / 8;
+    }
+
+    .transactions-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .transactions-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .transaction-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .transaction-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border: var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+
+    .transaction-item:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .transaction-item:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 0 var(--black);
+    }
+
+    .txn-icon {
+      width: 42px;
+      height: 42px;
+      border: var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      background: var(--white);
+    }
+
+    .txn-info {
+      flex: 1;
+    }
+
+    .txn-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .txn-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 2px solid var(--black);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .tag-food     { background: var(--neon-green); }
+    .tag-gaming   { background: var(--hot-pink); color: var(--white); }
+    .tag-transport{ background: var(--electric-blue); }
+    .tag-fashion  { background: var(--yellow); }
+    .tag-bills    { background: var(--orange); color: var(--white); }
+    .tag-coffee   { background: #C89B6E; color: var(--white); }
+    .tag-music    { background: #C084FC; }
+    .tag-fitness  { background: #4ADE80; }
+
+    .txn-date {
+      font-size: 0.7rem;
+      font-weight: 500;
+      opacity: 0.5;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .txn-amount {
+      font-family: 'DM Mono', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .txn-amount.expense { color: var(--hot-pink); }
+    .txn-amount.income  { color: #16A34A; }
+
+    /* ─────────────────────────────────────
+       QUICK ADD FORM
+    ───────────────────────────────────── */
+    .quick-add-card {
+      grid-column: 8 / 13;
+      background: var(--neon-green);
+      transform: rotate(0.5deg);
+    }
+
+    .quick-add-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      opacity: 0.6;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: var(--border);
+      border-radius: var(--radius);
+      background: var(--white);
+      font-family: 'DM Mono', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--black);
+      outline: none;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.1s, transform 0.1s;
+    }
+
+    .form-input:focus {
+      box-shadow: var(--shadow-md);
+      transform: translate(-1px, -1px);
+    }
+
+    .amount-input-wrapper {
+      position: relative;
+    }
+
+    .amount-prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      color: var(--black);
+      pointer-events: none;
+    }
+
+    .amount-input-wrapper .form-input {
+      padding-left: 32px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+    }
+
+    /* Tag Pills */
+    .tag-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .pill-input {
+      display: none;
+    }
+
+    .pill-label {
+      display: inline-block;
+      padding: 5px 12px;
+      border: var(--border);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: var(--white);
+      transition: background 0.1s, transform 0.08s, box-shadow 0.08s;
+      font-family: 'DM Mono', monospace;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pill-label:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .pill-input:checked + .pill-label {
+      background: var(--black);
+      color: var(--neon-green);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 0 var(--black);
+    }
+
+    .form-input[type="date"] {
+      font-family: 'DM Mono', monospace;
+    }
+
+    .form-submit {
+      width: 100%;
+      margin-top: 6px;
+      justify-content: center;
+    }
+
+    /* ─────────────────────────────────────
+       PROGRESS / BUDGET BAR
+    ───────────────────────────────────── */
+    .budget-card {
+      grid-column: 1 / 7;
+    }
+
+    .budget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .budget-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+    }
+
+    .budget-nums {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .budget-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .budget-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .budget-row-label {
+      width: 90px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 22px;
+      border: var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+    }
+
+    .bar-pct {
+      font-size: 0.62rem;
+      font-weight: 800;
+      font-family: 'DM Mono', monospace;
+      color: var(--black);
+    }
+
+    .bar-food    { background: var(--neon-green); width: 72%; }
+    .bar-gaming  { background: var(--hot-pink);   width: 38%; }
+    .bar-coffee  { background: var(--yellow);      width: 55%; }
+    .bar-fashion { background: var(--electric-blue); width: 89%; }
+    .bar-fashion .bar-pct { color: var(--white); }
+
+    .budget-row-amt {
+      width: 60px;
+      text-align: right;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────
+       INSIGHT CARD
+    ───────────────────────────────────── */
+    .insight-card {
+      grid-column: 7 / 13;
+      background: var(--black);
+      color: var(--white);
+      transform: rotate(-0.4deg);
+    }
+
+    .insight-card .card-label {
+      color: var(--hot-pink);
+      opacity: 1;
+    }
+
+    .insight-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: var(--yellow);
+      margin-bottom: 12px;
+    }
+
+    .insight-text {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      opacity: 0.8;
+      margin-bottom: 16px;
+    }
+
+    .insight-text strong {
+      color: var(--neon-green);
+      opacity: 1;
+    }
+
+    .insight-highlight {
+      background: var(--hot-pink);
+      color: var(--white);
+      padding: 12px 16px;
+      border: var(--border-width) solid var(--hot-pink);
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ─────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────── */
+    .site-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border: var(--border);
+      border-radius: var(--radius);
+      background: var(--black);
+      color: rgba(255,255,255,0.5);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .footer-logo {
+      color: var(--neon-green);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+    }
+
+    /* ─────────────────────────────────────
+       DECORATIVE ELEMENTS
+    ───────────────────────────────────── */
+    .deco-corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-right: var(--border);
+      border-bottom: var(--border);
+      bottom: 10px;
+      right: 10px;
+      opacity: 0.15;
+    }
+
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      color: var(--black);
+      opacity: 0.35;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: var(--black);
+      opacity: 0.2;
+    }
+
+    /* ─────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────── */
+    @media (max-width: 900px) {
+      .bento-grid { grid-template-columns: repeat(6, 1fr); }
+      .hero-card  { grid-column: 1 / -1; }
+      .streak-card { grid-column: 1 / -1; transform: none; }
+      .stat-card  { grid-column: span 3; }
+      .transactions-card { grid-column: 1 / -1; }
+      .quick-add-card { grid-column: 1 / -1; transform: none; }
+      .budget-card { grid-column: 1 / -1; }
+      .insight-card { grid-column: 1 / -1; transform: none; }
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      .hero-card  { transform: none; padding: 24px; }
+      .hero-card .hero-balance { font-size: clamp(3rem, 16vw, 5rem); }
+      .stat-card  { grid-column: span 3; }
+      .nav-pills  { display: none; }
+      .site-footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ══════════════════════════════════
+       HEADER
+  ══════════════════════════════════ -->
+  <header class="site-header">
+    <a class="site-logo" href="#">VAULT<span>.</span></a>
+    <nav aria-label="Primary navigation">
+      <ul class="nav-pills">
+        <li><a href="index.html" class="active">Dashboard</a></li>
+        <li><a href="transactions.html">Transactions</a></li>
+        <li><a href="budget.html">Budget</a></li>
+        <li><a href="insights.html">Insights</a></li>
+      </ul>
+    </nav>
+    <div class="header-badge">🔒 Secure</div>
+  </header>
+
+  <!-- ══════════════════════════════════
+       MAIN BENTO GRID
+  ══════════════════════════════════ -->
+  <main>
+    <div class="bento-grid">
+
+      <!-- ── HERO VAULT ── -->
+      <section class="card hero-card" aria-label="Net balance">
+        <div class="card-label">💰 NET BALANCE</div>
+        <div class="hero-balance display">
+          <sup>$</sup>4,209<span style="color:var(--yellow)">.37</span>
+        </div>
+        <div class="balance-change" id="balance-change-indicator">
+          ▲ +$342 this week
+        </div>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" id="btn-add" aria-label="Add funds">
+            <span>＋</span> Add Money
+          </button>
+          <button class="btn btn-secondary btn-lg" id="btn-withdraw" aria-label="Withdraw funds">
+            <span>↑</span> Withdraw
+          </button>
+          <button class="btn btn-ghost" id="btn-history" aria-label="View history">
+            History ↗
+          </button>
+        </div>
+        <div class="deco-corner"></div>
+      </section>
+
+      <!-- ── STREAK CARD ── -->
+      <section class="card streak-card" aria-label="Savings streak">
+        <span class="streak-emoji" aria-hidden="true">🔥</span>
+        <div class="card-label">SAVINGS STREAK</div>
+        <div class="streak-number display">14</div>
+        <div class="streak-label">Days Under Budget</div>
+        <div class="streak-dots" aria-label="Streak dots for past 14 days">
+          <div class="streak-dot">M</div>
+          <div class="streak-dot">T</div>
+          <div class="streak-dot">W</div>
+          <div class="streak-dot">T</div>
+          <div class="streak-dot">F</div>
+          <div class="streak-dot">S</div>
+          <div class="streak-dot">S</div>
+          <div class="streak-dot">M</div>
+          <div class="streak-dot">T</div>
+          <div class="streak-dot">W</div>
+          <div class="streak-dot">T</div>
+          <div class="streak-dot">F</div>
+          <div class="streak-dot">S</div>
+          <div class="streak-dot">S</div>
+          <div class="streak-dot empty">.</div>
+          <div class="streak-dot empty">.</div>
+          <div class="streak-dot empty">.</div>
+          <div class="streak-dot empty">.</div>
+          <div class="streak-dot empty">.</div>
+          <div class="streak-dot empty">.</div>
+          <div class="streak-dot empty">.</div>
+        </div>
+      </section>
+
+      <!-- ── STAT CARDS ── -->
+      <div class="card stat-card" role="region" aria-label="Total spent this month">
+        <div class="card-label">Total Spent</div>
+        <div class="stat-value display">$1,847</div>
+        <div class="stat-sub">↑ 12% vs last month</div>
+      </div>
+
+      <div class="card stat-card" role="region" aria-label="Biggest category">
+        <div class="card-label">Top Category</div>
+        <div class="stat-value display">#FOOD</div>
+        <div class="stat-sub">$412 this month</div>
+      </div>
+
+      <div class="card stat-card" role="region" aria-label="Daily average">
+        <div class="card-label">Daily Avg</div>
+        <div class="stat-value display">$73</div>
+        <div class="stat-sub">↓ $8 from goal</div>
+      </div>
+
+      <div class="card stat-card" role="region" aria-label="Remaining budget">
+        <div class="card-label">Remaining</div>
+        <div class="stat-value display">$653</div>
+        <div class="stat-sub">Until Feb 28</div>
+      </div>
+
+      <!-- ── SECTION DIVIDER ── -->
+      <div style="grid-column: 1/-1;">
+        <div class="section-divider">RECENT TRANSACTIONS</div>
+      </div>
+
+      <!-- ── TRANSACTION LIST ── -->
+      <section class="card transactions-card" aria-label="Recent transactions">
+        <div class="transactions-header">
+          <h2 class="transactions-title display">Daily Spend</h2>
+          <button class="btn btn-sm" style="background:var(--bg);" id="btn-see-all">See All →</button>
+        </div>
+        <div class="transaction-list" id="transaction-list">
+
+          <div class="transaction-item" tabindex="0">
+            <div class="txn-icon" aria-hidden="true">🍜</div>
+            <div class="txn-info">
+              <div class="txn-name">Ramen & Co.</div>
+              <div class="txn-meta">
+                <span class="tag tag-food">#FOOD</span>
+                <span class="txn-date mono">Feb 22, 2026</span>
+              </div>
+            </div>
+            <div class="txn-amount expense">−$18.50</div>
+          </div>
+
+          <div class="transaction-item" tabindex="0">
+            <div class="txn-icon" aria-hidden="true">🎮</div>
+            <div class="txn-info">
+              <div class="txn-name">Steam Purchase</div>
+              <div class="txn-meta">
+                <span class="tag tag-gaming">#GAMING</span>
+                <span class="txn-date mono">Feb 21, 2026</span>
+              </div>
+            </div>
+            <div class="txn-amount expense">−$29.99</div>
+          </div>
+
+          <div class="transaction-item" tabindex="0">
+            <div class="txn-icon" aria-hidden="true">🚇</div>
+            <div class="txn-info">
+              <div class="txn-name">Metro Card Top-Up</div>
+              <div class="txn-meta">
+                <span class="tag tag-transport">#TRANSPORT</span>
+                <span class="txn-date mono">Feb 21, 2026</span>
+              </div>
+            </div>
+            <div class="txn-amount expense">−$32.00</div>
+          </div>
+
+          <div class="transaction-item" tabindex="0">
+            <div class="txn-icon" aria-hidden="true">💸</div>
+            <div class="txn-info">
+              <div class="txn-name">Paycheck Deposit</div>
+              <div class="txn-meta">
+                <span class="tag" style="background:var(--neon-green);">#INCOME</span>
+                <span class="txn-date mono">Feb 20, 2026</span>
+              </div>
+            </div>
+            <div class="txn-amount income">+$1,240.00</div>
+          </div>
+
+          <div class="transaction-item" tabindex="0">
+            <div class="txn-icon" aria-hidden="true">☕</div>
+            <div class="txn-info">
+              <div class="txn-name">Blue Bottle Coffee</div>
+              <div class="txn-meta">
+                <span class="tag tag-coffee">#COFFEE</span>
+                <span class="txn-date mono">Feb 20, 2026</span>
+              </div>
+            </div>
+            <div class="txn-amount expense">−$7.25</div>
+          </div>
+
+          <div class="transaction-item" tabindex="0">
+            <div class="txn-icon" aria-hidden="true">🎵</div>
+            <div class="txn-info">
+              <div class="txn-name">Spotify Premium</div>
+              <div class="txn-meta">
+                <span class="tag tag-music">#MUSIC</span>
+                <span class="txn-date mono">Feb 19, 2026</span>
+              </div>
+            </div>
+            <div class="txn-amount expense">−$9.99</div>
+          </div>
+
+          <div class="transaction-item" tabindex="0">
+            <div class="txn-icon" aria-hidden="true">👟</div>
+            <div class="txn-info">
+              <div class="txn-name">ASOS Haul</div>
+              <div class="txn-meta">
+                <span class="tag tag-fashion">#FASHION</span>
+                <span class="txn-date mono">Feb 18, 2026</span>
+              </div>
+            </div>
+            <div class="txn-amount expense">−$74.00</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── QUICK ADD FORM ── -->
+      <section class="card quick-add-card" aria-label="Quick add transaction">
+        <h2 class="quick-add-title display">Quick Add ＋</h2>
+
+        <form id="quick-add-form" novalidate>
+
+          <div class="form-group">
+            <label class="form-label" for="amount">Amount</label>
+            <div class="amount-input-wrapper">
+              <span class="amount-prefix" aria-hidden="true">$</span>
+              <input
+                class="form-input"
+                type="number"
+                id="amount"
+                name="amount"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+                required
+                aria-required="true"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Category Tag</label>
+            <div class="tag-pills" role="group" aria-label="Select a category">
+              <input class="pill-input" type="radio" name="tag" id="tag-food" value="food" />
+              <label class="pill-label" for="tag-food">#FOOD</label>
+
+              <input class="pill-input" type="radio" name="tag" id="tag-gaming" value="gaming" />
+              <label class="pill-label" for="tag-gaming">#GAMING</label>
+
+              <input class="pill-input" type="radio" name="tag" id="tag-transport" value="transport" />
+              <label class="pill-label" for="tag-transport">#TRANSPORT</label>
+
+              <input class="pill-input" type="radio" name="tag" id="tag-coffee" value="coffee" />
+              <label class="pill-label" for="tag-coffee">#COFFEE</label>
+
+              <input class="pill-input" type="radio" name="tag" id="tag-fashion" value="fashion" />
+              <label class="pill-label" for="tag-fashion">#FASHION</label>
+
+              <input class="pill-input" type="radio" name="tag" id="tag-bills" value="bills" />
+              <label class="pill-label" for="tag-bills">#BILLS</label>
+
+              <input class="pill-input" type="radio" name="tag" id="tag-fitness" value="fitness" />
+              <label class="pill-label" for="tag-fitness">#FITNESS</label>
+
+              <input class="pill-input" type="radio" name="tag" id="tag-music" value="music" />
+              <label class="pill-label" for="tag-music">#MUSIC</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="txn-note">Note (optional)</label>
+            <input
+              class="form-input"
+              type="text"
+              id="txn-note"
+              name="note"
+              placeholder="e.g. Dinner w/ friends"
+              maxlength="80"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="txn-date">Date</label>
+            <input
+              class="form-input"
+              type="date"
+              id="txn-date"
+              name="date"
+              value="2026-02-22"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg form-submit" id="btn-add-txn">
+            Log Spend 💸
+          </button>
+        </form>
+      </section>
+
+      <!-- ── BUDGET BARS ── -->
+      <section class="card budget-card" aria-label="Monthly budget breakdown">
+        <div class="budget-header">
+          <h2 class="budget-title display">Budget Bars 📊</h2>
+          <div class="budget-nums mono">Feb 2026</div>
+        </div>
+        <div class="budget-bars">
+
+          <div class="budget-row">
+            <span class="budget-row-label">🍜 Food</span>
+            <div class="bar-track" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" aria-label="Food budget: 72%">
+              <div class="bar-fill bar-food"><span class="bar-pct">72%</span></div>
+            </div>
+            <span class="budget-row-amt mono">$412</span>
+          </div>
+
+          <div class="budget-row">
+            <span class="budget-row-label">🎮 Gaming</span>
+            <div class="bar-track" role="progressbar" aria-valuenow="38" aria-valuemin="0" aria-valuemax="100" aria-label="Gaming budget: 38%">
+              <div class="bar-fill bar-gaming"><span class="bar-pct" style="color:white;">38%</span></div>
+            </div>
+            <span class="budget-row-amt mono">$114</span>
+          </div>
+
+          <div class="budget-row">
+            <span class="budget-row-label">☕ Coffee</span>
+            <div class="bar-track" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100" aria-label="Coffee budget: 55%">
+              <div class="bar-fill bar-coffee"><span class="bar-pct">55%</span></div>
+            </div>
+            <span class="budget-row-amt mono">$55</span>
+          </div>
+
+          <div class="budget-row">
+            <span class="budget-row-label">👟 Fashion</span>
+            <div class="bar-track" role="progressbar" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100" aria-label="Fashion budget: 89% — almost over!">
+              <div class="bar-fill bar-fashion"><span class="bar-pct">89% ⚠️</span></div>
+            </div>
+            <span class="budget-row-amt mono">$267</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── INSIGHT CARD ── -->
+      <section class="card insight-card" aria-label="AI spending insight">
+        <div class="card-label">✨ VAULT INSIGHT</div>
+        <div class="insight-title display">You spend 3× more on weekends</div>
+        <p class="insight-text">
+          Your weekend spend averages <strong>$94/day</strong> vs just <strong>$31/day</strong> on weekdays.
+          Your Fashion budget is about to blow up — only <strong>$33 left</strong> and 6 days to go.
+        </p>
+        <div class="insight-highlight">
+          💡 Skip one takeout this weekend = save ~$22
+        </div>
+        <div style="margin-top:14px;">
+          <button class="btn btn-ghost btn-sm" id="btn-more-insights">More Insights →</button>
+        </div>
+      </section>
+
+    </div><!-- /bento-grid -->
+  </main>
+
+  <!-- ══════════════════════════════════
+       FOOTER
+  ══════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-logo">VAULT.</div>
+    <div>© 2026 VAULT — Built for broke &amp; ambitious 💀</div>
+    <div>Privacy · Terms · Support</div>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+</body>
+</html>

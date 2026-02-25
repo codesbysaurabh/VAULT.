@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAULT — Transactions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─────────────────────────────────────
+       CSS VARIABLES
+    ───────────────────────────────────── */
+    :root {
+      --bg:             #F0F0F0;
+      --black:          #0A0A0A;
+      --white:          #FFFFFF;
+      --neon-green:     #BAFF00;
+      --yellow:         #FFE500;
+      --hot-pink:       #FF2D78;
+      --electric-blue:  #00D4FF;
+      --orange:         #FF6B00;
+      --red-expense:    #FF3333;
+      --green-income:   #BAFF00;
+
+      --border-width: 3px;
+      --border-thick: 4px;
+      --border:       4px solid #0A0A0A;
+
+      --shadow-sm:  4px 4px 0px 0px #0A0A0A;
+      --shadow-md:  6px 6px 0px 0px #0A0A0A;
+      --shadow-lg:  10px 10px 0px 0px #0A0A0A;
+      --shadow-xl:  14px 14px 0px 0px #0A0A0A;
+
+      --radius: 6px;
+      --gap:    16px;
+      --gap-lg: 24px;
+    }
+
+    /* ─────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      font-family: 'Outfit', sans-serif;
+      color: var(--black);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* noise texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─────────────────────────────────────
+       TYPOGRAPHY
+    ───────────────────────────────────── */
+    .display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; }
+    .mono    { font-family: 'DM Mono', monospace; }
+
+    /* ─────────────────────────────────────
+       PAGE WRAPPER
+    ───────────────────────────────────── */
+    .page-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-lg);
+    }
+
+    /* ─────────────────────────────────────
+       HEADER / NAV
+    ───────────────────────────────────── */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: var(--black);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+    }
+
+    .site-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--neon-green);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+    .site-logo span { color: var(--yellow); }
+
+    .nav-pills { display: flex; gap: 10px; list-style: none; }
+
+    .nav-pills a {
+      display: inline-block;
+      padding: 6px 14px;
+      border: 3px solid var(--white);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--white);
+      transition: background 0.1s, color 0.1s;
+    }
+    .nav-pills a:hover { background: var(--neon-green); color: var(--black); border-color: var(--neon-green); }
+    .nav-pills a.active { background: var(--hot-pink); color: var(--white); border-color: var(--hot-pink); }
+
+    .header-badge {
+      background: var(--neon-green);
+      color: var(--black);
+      font-size: 0.65rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 3px solid var(--black);
+    }
+
+    /* ─────────────────────────────────────
+       PAGE HERO BANNER
+    ───────────────────────────────────── */
+    .page-hero {
+      background: var(--black);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 32px 36px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      transform: rotate(-0.4deg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* decorative tape strip */
+    .page-hero::before {
+      content: 'RECENT ACTIVITY ✦ RECENT ACTIVITY ✦ RECENT ACTIVITY ✦ RECENT ACTIVITY ✦';
+      position: absolute;
+      top: 14px;
+      left: -10px;
+      right: -10px;
+      background: var(--hot-pink);
+      color: var(--white);
+      font-size: 0.55rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 4px 0;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      transform: rotate(-0.5deg);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .page-hero-left { padding-top: 28px; }
+
+    .page-hero-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--hot-pink);
+      margin-bottom: 6px;
+    }
+
+    .page-hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      line-height: 0.95;
+      color: var(--white);
+      letter-spacing: 0.02em;
+    }
+
+    .page-hero-title em {
+      color: var(--neon-green);
+      font-style: normal;
+    }
+
+    .page-hero-right {
+      padding-top: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .hero-stat-pill {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-stat-pill .pill-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      line-height: 1;
+      display: block;
+    }
+    .hero-stat-pill .pill-val.red   { color: var(--red-expense); }
+    .hero-stat-pill .pill-val.green { color: #16A34A; }
+    .hero-stat-pill .pill-val.blue  { color: #0066CC; }
+
+    .hero-stat-pill .pill-label {
+      font-size: 0.55rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--black);
+      opacity: 0.55;
+      margin-top: 2px;
+      display: block;
+    }
+
+    /* ─────────────────────────────────────
+       FILTER BAR
+    ───────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 14px 18px;
+    }
+
+    .filter-label {
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-right: 4px;
+    }
+
+    .filter-chip {
+      padding: 5px 14px;
+      border: var(--border);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: var(--bg);
+      font-family: 'DM Mono', monospace;
+      transition: background 0.08s, transform 0.08s, box-shadow 0.08s;
+      box-shadow: 3px 3px 0 0 var(--black);
+      border-radius: 4px;
+    }
+
+    .filter-chip:hover,
+    .filter-chip.active {
+      background: var(--black);
+      color: var(--white);
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0 0 var(--black);
+    }
+
+    .filter-chip.active.pink  { background: var(--hot-pink); }
+    .filter-chip.active.green { background: var(--neon-green); color: var(--black); }
+    .filter-chip.active.blue  { background: var(--electric-blue); color: var(--black); }
+    .filter-chip.active.yell  { background: var(--yellow); color: var(--black); }
+
+    .filter-sep {
+      width: 1px;
+      height: 24px;
+      background: var(--black);
+      opacity: 0.15;
+      margin: 0 4px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .search-input {
+      padding: 7px 14px;
+      border: var(--border);
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--black);
+      background: var(--bg);
+      outline: none;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.1s, transform 0.1s;
+      width: 200px;
+    }
+
+    .search-input:focus {
+      box-shadow: var(--shadow-md);
+      transform: translate(-1px, -1px);
+    }
+
+    .search-input::placeholder { opacity: 0.4; }
+
+    /* ─────────────────────────────────────
+       MAIN LAYOUT (two cols)
+    ───────────────────────────────────── */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: var(--gap);
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .main-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ─────────────────────────────────────
+       BENTO TRANSACTION CONTAINER
+    ───────────────────────────────────── */
+    .txn-bento {
+      background: var(--white);
+      border: 4px solid var(--black);
+      border-radius: var(--radius);
+      box-shadow: 10px 10px 0px 0px var(--black);
+      padding: 24px;
+      position: relative;
+    }
+
+    .txn-bento-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid var(--black);
+    }
+
+    .txn-bento-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.06em;
+    }
+
+    .txn-count-badge {
+      background: var(--hot-pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      padding: 4px 12px;
+      border: 3px solid var(--black);
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ─────────────────────────────────────
+       SCROLLABLE TRANSACTION LIST AREA
+    ───────────────────────────────────── */
+    .txn-scroll-area {
+      max-height: 680px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    /* Custom Thick Rectangular Scrollbar */
+    .txn-scroll-area::-webkit-scrollbar        { width: 12px; }
+    .txn-scroll-area::-webkit-scrollbar-track  { background: var(--bg); border: 3px solid var(--black); border-radius: 0; }
+    .txn-scroll-area::-webkit-scrollbar-thumb  { background: var(--black); border-radius: 0; border: none; }
+    .txn-scroll-area::-webkit-scrollbar-thumb:hover { background: #333; }
+    .txn-scroll-area { scrollbar-width: thick; scrollbar-color: var(--black) var(--bg); }
+
+    /* ─────────────────────────────────────
+       DATE GROUP SEPARATOR
+    ───────────────────────────────────── */
+    .date-group-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.45;
+      padding: 6px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .date-group-label::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: var(--black);
+      opacity: 0.12;
+    }
+
+    /* ─────────────────────────────────────
+       TRANSACTION CARD (FLYING PAPERS)
+    ───────────────────────────────────── */
+    .txn-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 14px;
+      border: var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      margin-bottom: 20px;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.15s cubic-bezier(.22,.61,.36,1),
+                  box-shadow 0.15s cubic-bezier(.22,.61,.36,1);
+    }
+
+    /* — tossed rotations — */
+    .txn-card:nth-child(1)  { transform: rotate(1deg);    box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(2)  { transform: rotate(-1.5deg); box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(3)  { transform: rotate(0.5deg);  box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(4)  { transform: rotate(-0.8deg); box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(5)  { transform: rotate(1.2deg);  box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(6)  { transform: rotate(-0.4deg); box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(7)  { transform: rotate(0.9deg);  box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(8)  { transform: rotate(-1.2deg); box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(9)  { transform: rotate(0.6deg);  box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(10) { transform: rotate(-0.7deg); box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(11) { transform: rotate(1.4deg);  box-shadow: 5px 5px 0 0 var(--black); }
+    .txn-card:nth-child(12) { transform: rotate(-1.1deg); box-shadow: 5px 5px 0 0 var(--black); }
+
+    /* — hover: lifts off the paper — */
+    .txn-card:hover {
+      transform: rotate(0deg) scale(1.02) !important;
+      box-shadow: 10px 10px 0 0 var(--black) !important;
+      z-index: 10;
+      background: var(--white);
+    }
+
+    .txn-card:active {
+      transform: rotate(0deg) scale(0.99) !important;
+      box-shadow: 3px 3px 0 0 var(--black) !important;
+    }
+
+    /* ─────────────────────────────────────
+       ICON BOX
+    ───────────────────────────────────── */
+    .txn-icon-box {
+      width: 48px;
+      height: 48px;
+      border: var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      background: var(--white);
+      box-shadow: 3px 3px 0 0 var(--black);
+    }
+
+    /* ─────────────────────────────────────
+       TRANSACTION INFO
+    ───────────────────────────────────── */
+    .txn-body { flex: 1; min-width: 0; }
+
+    .txn-merchant {
+      font-weight: 900;
+      font-size: 0.88rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .txn-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .txn-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      opacity: 0.45;
+    }
+
+    /* ─────────────────────────────────────
+       PILL / STICKER TAGS
+    ───────────────────────────────────── */
+    .pill {
+      display: inline-block;
+      padding: 2px 9px;
+      border: 2px solid var(--black);
+      border-radius: 4px;
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .pill-food      { background: var(--neon-green); color: var(--black); }
+    .pill-gaming    { background: var(--hot-pink); color: var(--white); }
+    .pill-transport { background: var(--electric-blue); color: var(--black); }
+    .pill-fashion   { background: var(--yellow); color: var(--black); }
+    .pill-bills     { background: var(--orange); color: var(--white); }
+    .pill-coffee    { background: #C89B6E; color: var(--white); }
+    .pill-music     { background: #C084FC; color: var(--black); }
+    .pill-fitness   { background: #4ADE80; color: var(--black); }
+    .pill-income    { background: var(--neon-green); color: var(--black); }
+    .pill-health    { background: #F87171; color: var(--white); }
+    .pill-travel    { background: var(--electric-blue); color: var(--black); }
+    .pill-utilities { background: #94A3B8; color: var(--white); }
+    .pill-dining    { background: var(--orange); color: var(--white); }
+
+    /* ─────────────────────────────────────
+       AMOUNT BOX
+    ───────────────────────────────────── */
+    .txn-amount-box {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      white-space: nowrap;
+      padding: 6px 12px;
+      border: 2px solid var(--black);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+
+    .txn-amount-box.expense {
+      background: var(--red-expense);
+      color: var(--white);
+      box-shadow: 2px 2px 0 0 var(--black);
+    }
+
+    .txn-amount-box.income {
+      background: var(--neon-green);
+      color: var(--black);
+      box-shadow: 2px 2px 0 0 var(--black);
+    }
+
+    /* ─────────────────────────────────────
+       SIDEBAR
+    ───────────────────────────────────── */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
+
+    /* CARD BASE */
+    .card {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.45;
+      margin-bottom: 10px;
+    }
+
+    /* ── Monthly Summary Card ── */
+    .summary-card {
+      background: var(--black);
+      color: var(--white);
+      transform: rotate(0.5deg);
+    }
+
+    .summary-card .card-label { color: var(--neon-green); opacity: 1; }
+
+    .summary-net {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.2rem;
+      line-height: 1;
+      color: var(--neon-green);
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+
+    .summary-sub {
+      font-size: 0.72rem;
+      font-weight: 600;
+      opacity: 0.55;
+      margin-bottom: 16px;
+    }
+
+    .summary-split {
+      display: flex;
+      gap: 10px;
+    }
+
+    .split-item {
+      flex: 1;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+    }
+
+    .split-item .split-label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-bottom: 2px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .split-item .split-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .split-item .split-val.red   { color: #FF6B6B; }
+    .split-item .split-val.green { color: var(--neon-green); }
+
+    /* ── Spend Donut / Category Breakdown ── */
+    .breakdown-card {
+      background: var(--yellow);
+      transform: rotate(-0.6deg);
+    }
+
+    .breakdown-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+    }
+
+    .breakdown-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .breakdown-emoji { font-size: 1.1rem; width: 28px; text-align: center; }
+
+    .breakdown-bar-wrap {
+      flex: 1;
+      height: 10px;
+      background: rgba(0,0,0,0.12);
+      border: 2px solid var(--black);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .breakdown-bar-fill {
+      height: 100%;
+      background: var(--black);
+      border-radius: 0;
+      transition: width 0.4s ease;
+    }
+
+    .breakdown-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      width: 36px;
+      text-align: right;
+    }
+
+    /* ── Quick Stats Card ── */
+    .quickstats-card {
+      background: var(--electric-blue);
+      transform: rotate(0.3deg);
+    }
+
+    .quickstats-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+    }
+
+    .qs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .qs-item {
+      background: var(--white);
+      border: 3px solid var(--black);
+      border-radius: var(--radius);
+      padding: 10px;
+      box-shadow: 3px 3px 0 0 var(--black);
+    }
+
+    .qs-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .qs-lbl {
+      font-size: 0.57rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-top: 2px;
+    }
+
+    /* ── Export / Action Card ── */
+    .export-card {
+      background: var(--hot-pink);
+      transform: rotate(-0.4deg);
+    }
+
+    .export-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .export-btns { display: flex; flex-direction: column; gap: 8px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 20px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      border: var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s;
+      outline: none;
+      text-decoration: none;
+    }
+
+    .btn-black {
+      background: var(--black);
+      color: var(--white);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-black:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-white {
+      background: var(--white);
+      color: var(--black);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-white:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ─────────────────────────────────────
+       LOAD MORE BAR
+    ───────────────────────────────────── */
+    .load-more-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 4px;
+    }
+
+    .btn-load {
+      background: var(--neon-green);
+      color: var(--black);
+      border: var(--border);
+      border-radius: var(--radius);
+      padding: 13px 32px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.08s, box-shadow 0.08s;
+      width: 100%;
+    }
+
+    .btn-load:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-load:active {
+      transform: translate(3px, 3px);
+      box-shadow: 2px 2px 0 0 var(--black);
+    }
+
+    /* ─────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────── */
+    .site-footer {
+      background: var(--black);
+      color: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      font-weight: 600;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--neon-green);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─────────────────────────────────────
+       TOAST NOTIFICATION
+    ───────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      right: 24px;
+      background: var(--black);
+      color: var(--white);
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 12px 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      font-family: 'DM Mono', monospace;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────── */
+    @media (max-width: 640px) {
+      .hero-stats { gap: 8px; }
+      .hero-stat-pill { padding: 8px 12px; }
+      .hero-stat-pill .pill-val { font-size: 1.2rem; }
+      .filter-bar { gap: 6px; }
+      .search-box { margin-left: 0; width: 100%; }
+      .search-input { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ══════════════════════════════════
+       HEADER
+  ══════════════════════════════════ -->
+  <header class="site-header">
+    <a href="index.html" class="site-logo">VAULT<span>.</span></a>
+
+    <nav aria-label="Primary navigation">
+      <ul class="nav-pills">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="transactions.html" class="active">Transactions</a></li>
+        <li><a href="budget.html">Budget</a></li>
+        <li><a href="insights.html">Insights</a></li>
+      </ul>
+    </nav>
+
+    <span class="header-badge">● Live</span>
+  </header>
+
+  <!-- ══════════════════════════════════
+       PAGE HERO
+  ══════════════════════════════════ -->
+  <section class="page-hero" aria-label="Transactions overview">
+    <div class="page-hero-left">
+      <div class="page-hero-eyebrow">📋 Feb 2026 · All Accounts</div>
+      <h1 class="page-hero-title display">Recent<br><em>Activity</em></h1>
+    </div>
+
+    <div class="page-hero-right">
+      <div class="hero-stats">
+        <div class="hero-stat-pill">
+          <span class="pill-val red">−$834.72</span>
+          <span class="pill-label">Total Spent</span>
+        </div>
+        <div class="hero-stat-pill">
+          <span class="pill-val green">+$2,480</span>
+          <span class="pill-label">Total Income</span>
+        </div>
+        <div class="hero-stat-pill">
+          <span class="pill-val blue">24</span>
+          <span class="pill-label">Transactions</span>
+        </div>
+        <div class="hero-stat-pill">
+          <span class="pill-val" style="color:var(--orange);">$34.78</span>
+          <span class="pill-label">Avg. Per Day</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════
+       FILTER BAR
+  ══════════════════════════════════ -->
+  <div class="filter-bar" role="toolbar" aria-label="Filter transactions">
+    <span class="filter-label">Filter:</span>
+
+    <button class="filter-chip active pink"  id="f-all"     onclick="filterAll(this)">All</button>
+    <button class="filter-chip"              id="f-expense" onclick="filterBy(this,'expense')">Expenses</button>
+    <button class="filter-chip active green" id="f-income"  onclick="filterBy(this,'income')">Income</button>
+
+    <div class="filter-sep" aria-hidden="true"></div>
+
+    <button class="filter-chip" onclick="filterTag(this,'food')">🍕 Food</button>
+    <button class="filter-chip" onclick="filterTag(this,'gaming')">🎮 Gaming</button>
+    <button class="filter-chip" onclick="filterTag(this,'transport')">🚇 Transport</button>
+    <button class="filter-chip" onclick="filterTag(this,'coffee')">☕ Coffee</button>
+    <button class="filter-chip" onclick="filterTag(this,'music')">🎵 Music</button>
+    <button class="filter-chip" onclick="filterTag(this,'fashion')">👟 Fashion</button>
+
+    <div class="search-box">
+      <input
+        class="search-input mono"
+        type="search"
+        placeholder="Search transactions…"
+        aria-label="Search transactions"
+        oninput="searchTxns(this.value)"
+      />
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       MAIN LAYOUT
+  ══════════════════════════════════ -->
+  <div class="main-layout">
+
+    <!-- LEFT: Bento Transaction Container -->
+    <section aria-label="Transaction list">
+
+      <div class="txn-bento">
+        <div class="txn-bento-header">
+          <h2 class="txn-bento-title display">Recent Activity 🧾</h2>
+          <span class="txn-count-badge" id="txn-count">12 ENTRIES</span>
+        </div>
+
+        <div class="txn-scroll-area" id="txn-list">
+
+          <!-- ── FEB 23, 2026 ── -->
+          <div class="date-group-label">Today — Feb 23, 2026</div>
+
+          <!-- Card 1 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="food" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">🍕</div>
+            <div class="txn-body">
+              <div class="txn-merchant">DOMINO'S PIZZA</div>
+              <div class="txn-meta">
+                <span class="pill pill-food">#FOOD</span>
+                <span class="txn-date mono">Feb 23, 2026 · 08:42 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$22.99</div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="transport" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">🚗</div>
+            <div class="txn-body">
+              <div class="txn-merchant">UBER RIDE</div>
+              <div class="txn-meta">
+                <span class="pill pill-transport">#TRANSPORT</span>
+                <span class="txn-date mono">Feb 23, 2026 · 03:17 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$11.40</div>
+          </div>
+
+          <!-- ── FEB 22, 2026 ── -->
+          <div class="date-group-label">Yesterday — Feb 22, 2026</div>
+
+          <!-- Card 3 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="food" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">🍣</div>
+            <div class="txn-body">
+              <div class="txn-merchant">NOBU RESTAURANT</div>
+              <div class="txn-meta">
+                <span class="pill pill-food">#FOOD</span>
+                <span class="txn-date mono">Feb 22, 2026 · 07:30 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$18.50</div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="gaming" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">🎮</div>
+            <div class="txn-body">
+              <div class="txn-merchant">STEAM STORE</div>
+              <div class="txn-meta">
+                <span class="pill pill-gaming">#GAMING</span>
+                <span class="txn-date mono">Feb 22, 2026 · 02:14 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$29.99</div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="coffee" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">☕</div>
+            <div class="txn-body">
+              <div class="txn-merchant">BLUE BOTTLE COFFEE</div>
+              <div class="txn-meta">
+                <span class="pill pill-coffee">#COFFEE</span>
+                <span class="txn-date mono">Feb 22, 2026 · 09:05 AM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$7.25</div>
+          </div>
+
+          <!-- ── FEB 21, 2026 ── -->
+          <div class="date-group-label">Feb 21, 2026</div>
+
+          <!-- Card 6 -->
+          <div class="txn-card" tabindex="0" data-type="income" data-tag="income" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">💸</div>
+            <div class="txn-body">
+              <div class="txn-merchant">PAYCHECK DEPOSIT</div>
+              <div class="txn-meta">
+                <span class="pill pill-income">#INCOME</span>
+                <span class="txn-date mono">Feb 21, 2026 · 12:00 AM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box income">+$1,240.00</div>
+          </div>
+
+          <!-- Card 7 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="transport" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">🚇</div>
+            <div class="txn-body">
+              <div class="txn-merchant">METRO CARD TOP-UP</div>
+              <div class="txn-meta">
+                <span class="pill pill-transport">#TRANSPORT</span>
+                <span class="txn-date mono">Feb 21, 2026 · 08:00 AM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$32.00</div>
+          </div>
+
+          <!-- ── FEB 20, 2026 ── -->
+          <div class="date-group-label">Feb 20, 2026</div>
+
+          <!-- Card 8 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="music" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">🎵</div>
+            <div class="txn-body">
+              <div class="txn-merchant">SPOTIFY PREMIUM</div>
+              <div class="txn-meta">
+                <span class="pill pill-music">#MUSIC</span>
+                <span class="txn-date mono">Feb 20, 2026 · 11:30 AM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$9.99</div>
+          </div>
+
+          <!-- Card 9 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="fashion" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">👟</div>
+            <div class="txn-body">
+              <div class="txn-merchant">ASOS HAUL</div>
+              <div class="txn-meta">
+                <span class="pill pill-fashion">#FASHION</span>
+                <span class="txn-date mono">Feb 20, 2026 · 03:45 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$74.00</div>
+          </div>
+
+          <!-- Card 10 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="health" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">💊</div>
+            <div class="txn-body">
+              <div class="txn-merchant">CVS PHARMACY</div>
+              <div class="txn-meta">
+                <span class="pill pill-health">#HEALTH</span>
+                <span class="txn-date mono">Feb 20, 2026 · 01:10 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$14.60</div>
+          </div>
+
+          <!-- ── FEB 18, 2026 ── -->
+          <div class="date-group-label">Feb 18, 2026</div>
+
+          <!-- Card 11 -->
+          <div class="txn-card" tabindex="0" data-type="income" data-tag="income" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">🏦</div>
+            <div class="txn-body">
+              <div class="txn-merchant">FREELANCE PAYMENT</div>
+              <div class="txn-meta">
+                <span class="pill pill-income">#INCOME</span>
+                <span class="txn-date mono">Feb 18, 2026 · 09:00 AM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box income">+$1,240.00</div>
+          </div>
+
+          <!-- Card 12 -->
+          <div class="txn-card" tabindex="0" data-type="expense" data-tag="gaming" onclick="pingCard(this)">
+            <div class="txn-icon-box" aria-hidden="true">🕹️</div>
+            <div class="txn-body">
+              <div class="txn-merchant">PLAYSTATION STORE</div>
+              <div class="txn-meta">
+                <span class="pill pill-gaming">#GAMING</span>
+                <span class="txn-date mono">Feb 18, 2026 · 06:22 PM</span>
+              </div>
+            </div>
+            <div class="txn-amount-box expense">−$59.99</div>
+          </div>
+
+          <!-- Load More -->
+          <div class="load-more-bar">
+            <button class="btn-load" onclick="loadMore()">Load More Transactions ↓</button>
+          </div>
+
+        </div><!-- /txn-scroll-area -->
+      </div><!-- /txn-bento -->
+
+    </section>
+
+    <!-- RIGHT: Sidebar -->
+    <aside class="sidebar" aria-label="Transaction summary">
+
+      <!-- Monthly Summary -->
+      <div class="card summary-card">
+        <div class="card-label">📅 Feb 2026 Summary</div>
+        <div class="summary-net display">$1,645.28</div>
+        <div class="summary-sub mono">Net this month</div>
+        <div class="summary-split">
+          <div class="split-item">
+            <div class="split-label">Spent</div>
+            <div class="split-val red mono">−$834.72</div>
+          </div>
+          <div class="split-item">
+            <div class="split-label">Earned</div>
+            <div class="split-val green mono">+$2,480</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spend by Category -->
+      <div class="card breakdown-card">
+        <h3 class="breakdown-title display">By Category 📊</h3>
+
+        <div class="breakdown-row">
+          <span class="breakdown-emoji">🍕</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar-fill" style="width:72%;background:var(--neon-green);"></div></div>
+          <span class="breakdown-pct mono">72%</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-emoji">👟</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar-fill" style="width:89%;background:var(--hot-pink);"></div></div>
+          <span class="breakdown-pct mono">89%</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-emoji">🎮</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar-fill" style="width:38%;background:var(--electric-blue);"></div></div>
+          <span class="breakdown-pct mono">38%</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-emoji">☕</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar-fill" style="width:55%;background:var(--orange);"></div></div>
+          <span class="breakdown-pct mono">55%</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-emoji">🚇</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar-fill" style="width:41%;"></div></div>
+          <span class="breakdown-pct mono">41%</span>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="card quickstats-card">
+        <h3 class="quickstats-title display">Quick Stats ⚡</h3>
+        <div class="qs-grid">
+          <div class="qs-item">
+            <div class="qs-val display">$74</div>
+            <div class="qs-lbl">Biggest Spend</div>
+          </div>
+          <div class="qs-item">
+            <div class="qs-val display">24</div>
+            <div class="qs-lbl">Total Txns</div>
+          </div>
+          <div class="qs-item">
+            <div class="qs-val display" style="color:var(--hot-pink);">$34</div>
+            <div class="qs-lbl">Daily Avg</div>
+          </div>
+          <div class="qs-item">
+            <div class="qs-val display" style="color:#16A34A;">2</div>
+            <div class="qs-lbl">Deposits</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export -->
+      <div class="card export-card">
+        <h3 class="export-title display">Export Data 📤</h3>
+        <div class="export-btns">
+          <button class="btn btn-black" onclick="showToast('CSV downloaded! 📄')">↓ Download CSV</button>
+          <button class="btn btn-white" onclick="showToast('PDF report generated! 📑')">↓ Export PDF</button>
+          <button class="btn btn-black" onclick="showToast('Copied to clipboard! 📋')">⊞ Copy to Sheet</button>
+        </div>
+      </div>
+
+    </aside>
+  </div><!-- /main-layout -->
+
+  <!-- ══════════════════════════════════
+       FOOTER
+  ══════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-logo">VAULT.</div>
+    <div>© 2026 VAULT — Built for broke &amp; ambitious 💀</div>
+    <div>Privacy · Terms · Support</div>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+<!-- Toast -->
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  /* ── Toast ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  /* ── Card click ripple ── */
+  function pingCard(el) {
+    el.style.background = '#FFFFE0';
+    setTimeout(() => { el.style.background = ''; }, 280);
+    showToast('📋 Transaction details coming soon…');
+  }
+
+  /* ── Load more ── */
+  function loadMore() {
+    const area = document.getElementById('txn-list');
+    const btn  = area.querySelector('.load-more-bar');
+
+    const more = [
+      { emoji:'🏋️', merchant:'PLANET FITNESS', pill:'pill-fitness', tag:'#FITNESS', date:'Feb 17, 2026 · 07:00 AM', type:'expense', amt:'−$25.00', cls:'expense' },
+      { emoji:'✈️', merchant:'DELTA AIRLINES', pill:'pill-travel',  tag:'#TRAVEL',  date:'Feb 16, 2026 · 11:55 AM', type:'expense', amt:'−$212.00', cls:'expense' },
+      { emoji:'💡', merchant:'CON EDISON BILL', pill:'pill-utilities',tag:'#UTILITIES',date:'Feb 15, 2026 · 09:00 AM', type:'expense', amt:'−$94.30', cls:'expense' },
+    ];
+
+    const rotations = ['rotate(0.7deg)','rotate(-1.3deg)','rotate(1.1deg)'];
+
+    more.forEach((tx, i) => {
+      const card = document.createElement('div');
+      card.className = 'txn-card';
+      card.setAttribute('tabindex', '0');
+      card.dataset.type = tx.type;
+      card.style.transform = rotations[i];
+      card.style.boxShadow = '5px 5px 0 0 var(--black)';
+      card.setAttribute('onclick', 'pingCard(this)');
+      card.innerHTML = `
+        <div class="txn-icon-box" aria-hidden="true">${tx.emoji}</div>
+        <div class="txn-body">
+          <div class="txn-merchant">${tx.merchant}</div>
+          <div class="txn-meta">
+            <span class="pill ${tx.pill}">${tx.tag}</span>
+            <span class="txn-date mono">${tx.date}</span>
+          </div>
+        </div>
+        <div class="txn-amount-box ${tx.cls}">${tx.amt}</div>
+      `;
+      area.insertBefore(card, btn);
+    });
+
+    document.getElementById('txn-count').textContent = (area.querySelectorAll('.txn-card').length) + ' ENTRIES';
+    btn.querySelector('button').textContent = '✓ All Caught Up!';
+    btn.querySelector('button').disabled = true;
+    btn.querySelector('button').style.opacity = '0.5';
+    btn.querySelector('button').style.cursor = 'default';
+  }
+
+  /* ── Filter helpers ── */
+  function clearChips() {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active','pink','green','blue','yell'));
+  }
+
+  function filterAll(btn) {
+    clearChips();
+    btn.classList.add('active','pink');
+    document.querySelectorAll('.txn-card').forEach(c => c.style.display = '');
+  }
+
+  function filterBy(btn, type) {
+    clearChips();
+    btn.classList.add('active', type === 'income' ? 'green' : 'pink');
+    document.querySelectorAll('.txn-card').forEach(c => {
+      c.style.display = c.dataset.type === type ? '' : 'none';
+    });
+  }
+
+  function filterTag(btn, tag) {
+    clearChips();
+    btn.classList.add('active','blue');
+    document.querySelectorAll('.txn-card').forEach(c => {
+      c.style.display = c.dataset.tag === tag ? '' : 'none';
+    });
+  }
+
+  function searchTxns(q) {
+    const query = q.toLowerCase();
+    document.querySelectorAll('.txn-card').forEach(c => {
+      const name = c.querySelector('.txn-merchant')?.textContent.toLowerCase() || '';
+      c.style.display = name.includes(query) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
