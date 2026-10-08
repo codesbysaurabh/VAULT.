@@ -1,0 +1,717 @@
+/* ==========================================================================
+   Vault — dashboard.css
+   Styles specific to the dashboard page. Shared styles are in base.css.
+   ========================================================================== */
+
+:root {
+  --shadow-md: 6px 6px 0px 0px var(--black);
+  --shadow-xl: 12px 12px 0px 0px var(--black);
+  --bg: #F0F0F0;
+  --shadow-lg: 8px 8px 0px 0px var(--black);
+  --shadow-sm: 4px 4px 0px 0px var(--black);
+  --nav-active: var(--hot-pink);
+  --nav-active-text: var(--white);
+  --badge-bg: var(--neon-green);
+}
+
+/* ─────────────────────────────────────
+BENTO GRID
+───────────────────────────────────── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+  gap: var(--gap);
+}
+
+/* ─────────────────────────────────────
+CARD BASE
+───────────────────────────────────── */
+.card {
+  background: var(--white);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--black);
+  opacity: 0.5;
+  margin-bottom: 8px;
+}
+
+/* ─────────────────────────────────────
+HERO VAULT CARD
+───────────────────────────────────── */
+.hero-card {
+  grid-column: 1 / 8;
+  background: var(--black);
+  color: var(--white);
+  padding: 36px;
+  transform: rotate(-0.8deg);
+}
+
+.hero-card .card-label {
+  color: var(--neon-green);
+  opacity: 1;
+}
+
+.hero-card .hero-balance {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 9vw, 7.5rem);
+  line-height: 0.9;
+  color: var(--neon-green);
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+
+.hero-card .hero-balance sup {
+  font-size: 0.35em;
+  vertical-align: super;
+  color: var(--yellow);
+}
+
+.balance-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--neon-green);
+  color: var(--black);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: var(--border-width) solid var(--neon-green);
+  margin-bottom: 28px;
+}
+
+.balance-change.negative {
+  background: var(--hot-pink);
+  color: var(--white);
+  border-color: var(--hot-pink);
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 3D Physical Button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.08s, box-shadow 0.08s;
+  outline: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--neon-green);
+  color: var(--black);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 0 var(--black);
+}
+
+.btn-secondary {
+  background: var(--hot-pink);
+  color: var(--white);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary:active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 0 var(--black);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--white);
+  border-color: rgba(255,255,255,0.4);
+  box-shadow: none;
+}
+
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--white);
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.78rem;
+}
+
+.btn-lg {
+  padding: 16px 32px;
+  font-size: 1rem;
+}
+
+/* ─────────────────────────────────────
+STREAK / MOOD CARD
+───────────────────────────────────── */
+.streak-card {
+  grid-column: 8 / 13;
+  background: var(--yellow);
+  transform: rotate(0.6deg);
+}
+
+.streak-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--black);
+}
+
+.streak-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.streak-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.streak-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: var(--border);
+  background: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: var(--yellow);
+  font-weight: 800;
+}
+
+.streak-dot.empty {
+  background: rgba(0,0,0,0.15);
+  color: transparent;
+}
+
+.streak-emoji {
+  font-size: 3rem;
+  position: absolute;
+  top: 16px;
+  right: 20px;
+}
+
+/* ─────────────────────────────────────
+SUMMARY STAT CARDS
+───────────────────────────────────── */
+.stat-card {
+  grid-column: span 3;
+}
+
+.stat-card:nth-child(1) { background: var(--hot-pink); color: var(--white); }
+
+.stat-card:nth-child(2) { background: var(--electric-blue); transform: rotate(0.5deg); }
+
+.stat-card:nth-child(3) { background: var(--neon-green); transform: rotate(-0.4deg); }
+
+.stat-card:nth-child(4) { background: var(--orange); color: var(--white); transform: rotate(0.3deg); }
+
+.stat-card .card-label { opacity: 0.7; }
+
+.stat-card:nth-child(1) .card-label,
+.stat-card:nth-child(4) .card-label { color: rgba(255,255,255,0.8); opacity: 1; }
+
+.stat-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.6rem;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-sub {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.65;
+}
+
+.stat-card:hover {
+  transform: translate(-2px, -2px) rotate(-0.4deg);
+  box-shadow: var(--shadow-xl);
+  cursor: pointer;
+}
+
+.stat-card:active {
+  transform: translate(3px, 3px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─────────────────────────────────────
+TRANSACTION LIST CARD
+───────────────────────────────────── */
+.transactions-card {
+  grid-column: 1 / 8;
+}
+
+.transactions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.transactions-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+
+.transaction-item:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+}
+
+.transaction-item:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 var(--black);
+}
+
+.txn-icon {
+  width: 42px;
+  height: 42px;
+  border: var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  background: var(--white);
+}
+
+.txn-info {
+  flex: 1;
+}
+
+.txn-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.txn-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 2px solid var(--black);
+  font-family: 'DM Mono', monospace;
+}
+
+.tag-food     { background: var(--neon-green); }
+
+.tag-gaming   { background: var(--hot-pink); color: var(--white); }
+
+.tag-transport{ background: var(--electric-blue); }
+
+.tag-fashion  { background: var(--yellow); }
+
+.tag-bills    { background: var(--orange); color: var(--white); }
+
+.tag-coffee   { background: #C89B6E; color: var(--white); }
+
+.tag-music    { background: #C084FC; }
+
+.tag-fitness  { background: #4ADE80; }
+
+.txn-date {
+  font-size: 0.7rem;
+  font-weight: 500;
+  opacity: 0.5;
+  font-family: 'DM Mono', monospace;
+}
+
+.txn-amount {
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.txn-amount.expense { color: var(--hot-pink); }
+
+.txn-amount.income  { color: #16A34A; }
+
+/* ─────────────────────────────────────
+QUICK ADD FORM
+───────────────────────────────────── */
+.quick-add-card {
+  grid-column: 8 / 13;
+  background: var(--neon-green);
+  transform: rotate(0.5deg);
+}
+
+.quick-add-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  opacity: 0.6;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--black);
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.1s, transform 0.1s;
+}
+
+.form-input:focus {
+  box-shadow: var(--shadow-md);
+  transform: translate(-1px, -1px);
+}
+
+.amount-input-wrapper {
+  position: relative;
+}
+
+.amount-prefix {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  color: var(--black);
+  pointer-events: none;
+}
+
+.amount-input-wrapper .form-input {
+  padding-left: 32px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+}
+
+/* Tag Pills */
+.tag-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pill-input {
+  display: none;
+}
+
+.pill-label {
+  display: inline-block;
+  padding: 5px 12px;
+  border: var(--border);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: var(--white);
+  transition: background 0.1s, transform 0.08s, box-shadow 0.08s;
+  font-family: 'DM Mono', monospace;
+  box-shadow: var(--shadow-sm);
+}
+
+.pill-label:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-md);
+}
+
+.pill-input:checked + .pill-label {
+  background: var(--black);
+  color: var(--neon-green);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 var(--black);
+}
+
+.form-input[type="date"] {
+  font-family: 'DM Mono', monospace;
+}
+
+.form-submit {
+  width: 100%;
+  margin-top: 6px;
+  justify-content: center;
+}
+
+/* ─────────────────────────────────────
+PROGRESS / BUDGET BAR
+───────────────────────────────────── */
+.budget-card {
+  grid-column: 1 / 7;
+}
+
+.budget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.budget-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+}
+
+.budget-nums {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.budget-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.budget-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.budget-row-label {
+  width: 90px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.bar-track {
+  flex: 1;
+  height: 22px;
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}
+
+.bar-pct {
+  font-size: 0.62rem;
+  font-weight: 800;
+  font-family: 'DM Mono', monospace;
+  color: var(--black);
+}
+
+.bar-food    { background: var(--neon-green); width: 72%; }
+
+.bar-gaming  { background: var(--hot-pink);   width: 38%; }
+
+.bar-coffee  { background: var(--yellow);      width: 55%; }
+
+.bar-fashion { background: var(--electric-blue); width: 89%; }
+
+.bar-fashion .bar-pct { color: var(--white); }
+
+.budget-row-amt {
+  width: 60px;
+  text-align: right;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────
+INSIGHT CARD
+───────────────────────────────────── */
+.insight-card {
+  grid-column: 7 / 13;
+  background: var(--black);
+  color: var(--white);
+  transform: rotate(-0.4deg);
+}
+
+.insight-card .card-label {
+  color: var(--hot-pink);
+  opacity: 1;
+}
+
+.insight-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  color: var(--yellow);
+  margin-bottom: 12px;
+}
+
+.insight-text {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin-bottom: 16px;
+}
+
+.insight-text strong {
+  color: var(--neon-green);
+  opacity: 1;
+}
+
+.insight-highlight {
+  background: var(--hot-pink);
+  color: var(--white);
+  padding: 12px 16px;
+  border: var(--border-width) solid var(--hot-pink);
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─────────────────────────────────────
+DECORATIVE ELEMENTS
+───────────────────────────────────── */
+.deco-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-right: var(--border);
+  border-bottom: var(--border);
+  bottom: 10px;
+  right: 10px;
+  opacity: 0.15;
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  color: var(--black);
+  opacity: 0.35;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: var(--black);
+  opacity: 0.2;
+}
+
+/* ─────────────────────────────────────
+RESPONSIVE
+───────────────────────────────────── */
+@media (max-width: 900px) {
+  .bento-grid { grid-template-columns: repeat(6, 1fr); }
+  .hero-card  { grid-column: 1 / -1; }
+  .streak-card { grid-column: 1 / -1; transform: none; }
+  .stat-card  { grid-column: span 3; }
+  .transactions-card { grid-column: 1 / -1; }
+  .quick-add-card { grid-column: 1 / -1; transform: none; }
+  .budget-card { grid-column: 1 / -1; }
+  .insight-card { grid-column: 1 / -1; transform: none; }
+}
+
+@media (max-width: 600px) {
+  body { padding: 12px; }
+  .hero-card  { transform: none; padding: 24px; }
+  .hero-card .hero-balance { font-size: clamp(3rem, 16vw, 5rem); }
+  .stat-card  { grid-column: span 3; }
+  .nav-pills  { display: none; }
+  .site-footer { flex-direction: column; gap: 8px; text-align: center; }
+}
