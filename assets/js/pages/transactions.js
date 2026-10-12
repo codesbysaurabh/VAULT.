@@ -10,7 +10,7 @@ function render(){
  let last='',h='';
  L.slice(0,F.n).forEach(t=>{const k=t.date.slice(0,10);if(k!=last){last=k;h+=`<div class="date-group-label">${k==dk(new Date())?'Today — ':''}${dlabel(k)}</div>`}
   h+=`<div class="txn-card" tabindex="0" data-type="${t.type}" data-tag="${esc(t.cat)}"><div class="txn-icon-box">${s.cats[t.cat]||'💸'}</div><div class="txn-body"><div class="txn-merchant">${esc(t.name)}</div><div class="txn-meta"><span class="pill pill-${esc(t.cat)}">#${esc(t.cat.toUpperCase())}</span><span class="txn-date mono">${dlabel(k)} · ${tm(t.date)}</span><button class="del" data-id="${t.id}" title="Delete">✕</button></div></div><div class="txn-amount-box ${t.type}">${t.type=='income'?'+':'−'}${fmt(t.amt)}</div></div>`});
- if(!L.length)h='<p style="padding:20px;font-weight:700">No transactions match.</p>';
+ if(!L.length)h=s.txns.length?'<p style="padding:20px;font-weight:700">No transactions match.</p>':'<div style="padding:20px;font-weight:700">No transactions yet. <button class="btn btn-black" onclick="loadDemo()">Load demo data</button></div>';
  if(L.length>F.n)h+='<div class="load-more-bar"><button class="btn-load">Load More Transactions ↓</button></div>';
  $('#txn-list').innerHTML=h;$('#txn-count').textContent=L.length+' ENTRIES';
  $('#eyebrow').textContent='📋 '+mlabel()+' · All Accounts';

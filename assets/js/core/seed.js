@@ -17,3 +17,4 @@ function seed(){
  t.sort((a,b)=>b.date.localeCompare(a.date));
  return{opening:3000,budgets:{food:500,transport:200,fashion:300,gaming:150,coffee:100,bills:1800,music:30},cats:{food:'🍕',gaming:'🎮',transport:'🚇',coffee:'☕',fashion:'👟',bills:'🏠',music:'🎵',fitness:'🏋️'},txns:t};
 }
+function blank(){const s=seed();return{opening:0,budgets:s.budgets,cats:s.cats,txns:[]}}

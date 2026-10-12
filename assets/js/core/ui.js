@@ -5,8 +5,7 @@
 V.toast=function(m){let t=$('#vt');if(!t){t=document.createElement('div');t.id='vt';document.body.append(t)}t.textContent=m;t.className='show';clearTimeout(t._h);t._h=setTimeout(()=>t.className='',2400)};
 W.showToast=m=>V.toast(m);
 W.clearAll=async()=>{if(await confirmBox({title:'Clear all data?',text:'This deletes every transaction, including demo data, and starts fresh. It cannot be undone.',ok:'Delete everything'})){V.clear();V.toast('All data cleared — fresh start')}};
-W.resetDemo=async()=>{if(await confirmBox({title:'Reset to demo data?',text:'Your current transactions will be replaced with sample data.',ok:'Reset',danger:false}))V.reset()};
-document.addEventListener('DOMContentLoaded',()=>{const b=$('.header-badge');if(b&&/20\d\d/.test(b.textContent))b.textContent=(b.textContent[0]=='●'?'● ':'')+mlabel()});
+W.loadDemo=async()=>{if(!V.get().txns.length||await confirmBox({title:'Load demo data?',text:'Your current transactions will be replaced with sample data.',ok:'Load demo',danger:false})){V.demo();V.toast('Demo data loaded')}};W.resetDemo=W.loadDemo;document.addEventListener('DOMContentLoaded',()=>{const b=$('.header-badge');if(b&&/20\d\d/.test(b.textContent))b.textContent=(b.textContent[0]=='●'?'● ':'')+mlabel()});
 
 /**
  * Money dialog used by the dashboard "Add Money" / "Withdraw" buttons.

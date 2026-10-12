@@ -7,7 +7,7 @@ const STORE_KEY='vault:v2';
 const V={
  get(){try{const s=JSON.parse(localStorage.getItem(STORE_KEY));if(s&&s.txns)return s}catch(e){}return V.reset(true)},
  save(s,q){try{localStorage.setItem(STORE_KEY,JSON.stringify(s))}catch(e){}if(!q)dispatchEvent(new Event('vault'))},
- reset(q){const s=seed();V.save(s,q);return s},
+ reset(q){const s=blank();V.save(s,q);return s}, demo(q){const s=seed();V.save(s,q);return s},
  clear(){const s=V.get();s.txns=[];s.opening=0;V.save(s)},
  add(t){const s=V.get();s.txns.unshift({id:Date.now(),...t});s.txns.sort((a,b)=>b.date.localeCompare(a.date));V.save(s)},
  del(id){const s=V.get();s.txns=s.txns.filter(t=>t.id!=id);V.save(s)},

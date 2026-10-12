@@ -14,7 +14,7 @@ V.stats=function(s,now=new Date()){
   const pm=new Date(T.getFullYear(),T.getMonth()-1,1),pe=ex.filter(t=>t.date.startsWith(dk(pm).slice(0,7)));
   const lastTotal=pe.reduce((a,t)=>a+t.amt,0),lastMTD=pe.filter(t=>+t.date.slice(8,10)<=dom).reduce((a,t)=>a+t.amt,0);
   const dl=cats.filter(c=>c.c!='bills').reduce((a,c)=>a+c.l,0)/dim,good=n=>(day[dk(back(n))]||0)<=dl;
-  let streak=0;while(streak<90&&good(streak))streak++;
+  let streak=0;if(ex.length)while(streak<90&&good(streak))streak++;
   const last14=[];for(let n=13;n>=0;n--)last14.push({l:'SMTWTFS'[back(n).getDay()],good:good(n)});
   const dow=[0,0,0,0,0,0,0],cn=[0,0,0,0,0,0,0];for(let n=0;n<56;n++){const g=back(n).getDay();dow[g]+=day[dk(back(n))]||0;cn[g]++}
   const da=dow.map((v,i)=>v/Math.max(cn[i],1)),wd=(da[1]+da[2]+da[3]+da[4]+da[5])/5,we=(da[0]+da[6])/2;
