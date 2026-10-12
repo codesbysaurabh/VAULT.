@@ -1,12 +1,73 @@
 /**
  * Vault — core/ui
- * Shared UI behaviour: toast notifications, "clear all" action, header month badge.
+ * Shared UI behaviour: toast notifications, "clear all" action, header badge,
+ * month-cycle dialog, money dialog and confirm dialog.
  */
 V.toast=function(m){let t=$('#vt');if(!t){t=document.createElement('div');t.id='vt';document.body.append(t)}t.textContent=m;t.className='show';clearTimeout(t._h);t._h=setTimeout(()=>t.className='',2400)};
 W.showToast=m=>V.toast(m);
 W.clearAll=async()=>{if(await confirmBox({title:'Clear all data?',text:'This deletes every transaction, including demo data, and starts fresh. It cannot be undone.',ok:'Delete everything'})){V.clear();V.toast('All data cleared — fresh start')}};
 W.resetDemo=async()=>{if(await confirmBox({title:'Reset to demo data?',text:'Your current transactions will be replaced with sample data.',ok:'Reset',danger:false}))V.reset()};
-document.addEventListener('DOMContentLoaded',()=>{const b=$('.header-badge');if(b&&/20\d\d/.test(b.textContent))b.textContent=(b.textContent[0]=='●'?'● ':'')+mlabel()});
+
+// Header: the month badge follows the user's cycle, and a ⚙ button opens the cycle dialog.
+const badge=()=>{
+ const b=$('.header-badge');if(!b)return;
+ if(b.dataset.m===undefined)b.dataset.m=/20\d\d/.test(b.textContent)?'1':'';
+ if(b.dataset.m)b.textContent=(b.textContent[0]=='●'?'● ':'')+V.stats(V.get()).label;
+};
+const ready=f=>document.readyState=='loading'?document.addEventListener('DOMContentLoaded',f):f();
+ready(()=>{
+ const h=$('.site-header');
+ if(h&&!$('.cycle-btn')){
+  const b=document.createElement('button'),bg=$('.header-badge'),w=document.createElement('div');
+  b.type='button';b.className='cycle-btn';b.title='Choose when your month starts';b.setAttribute('aria-label','Month cycle settings');
+  b.innerHTML='⚙<span class="lbl"> Cycle</span>';b.onclick=()=>openCycleModal();
+  w.className='hdr-right';
+  if(bg){bg.replaceWith(w);w.append(bg,b)}else{w.append(b);h.append(w)}
+ }
+ badge();
+});
+addEventListener('vault',badge);
+
+/**
+ * Month-cycle dialog: choose the day your month starts (1–31). Every page's stats follow it.
+ */
+W.openCycleModal=()=>{
+ const old=$('#cycle-modal');if(old)old.remove();
+ const cur=V.get().cycleStart,o=document.createElement('div');o.id='cycle-modal';o.className='vm-overlay';
+ o.innerHTML=`<div class="vm-box" role="dialog" aria-modal="true" aria-labelledby="vc-title">
+  <h2 class="vm-title" id="vc-title">Month Cycle 📅</h2>
+  <p class="vm-sub">Pick the day your month starts</p>
+  <label class="vm-label" for="vc-day">Start day (1–31)</label>
+  <input class="vm-note" id="vc-day" type="number" inputmode="numeric" min="1" max="31" step="1" value="${cur}" autocomplete="off">
+  <div class="vm-quick">${[1,5,10,15,20,25,28].map(n=>`<button type="button" data-d="${n}">${ord(n)}</button>`).join('')}</div>
+  <p class="vm-text" id="vc-prev"></p>
+  <div class="vm-err" id="vc-err" role="alert"></div>
+  <div class="vm-actions"><button type="button" class="vm-save">SAVE ✓</button><button type="button" class="vm-cancel">Cancel</button></div>
+ </div>`;
+ document.body.append(o);
+ requestAnimationFrame(()=>o.classList.add('open'));
+ const inp=$('#vc-day'),prev=$('#vc-prev'),err=$('#vc-err');
+ const read=()=>{const v=inp.value.trim(),n=+v;return v!==''&&Number.isInteger(n)&&n>=1&&n<=31?n:0};
+ const show=()=>{
+  const d=read();
+  if(!d){prev.textContent='';err.textContent='Enter a whole number from 1 to 31';return}
+  err.textContent='';
+  const n=new Date(),t=new Date(n.getFullYear(),n.getMonth(),n.getDate()),c=cycleOf(t,d);
+  prev.innerHTML=`Current month: <strong>${esc(cycleLabel(c,d))}</strong> · ${Math.round((c.end-t)/864e5)} days left.<br>Months shorter than that day start on their last day.`;
+ };
+ const close=()=>{o.classList.remove('open');document.removeEventListener('keydown',key);setTimeout(()=>o.remove(),200)};
+ const save=()=>{const d=read();if(!d){show();inp.focus();return}V.setCycle(d);close();V.toast('Month now starts on the '+ord(d))};
+ const key=e=>{if(e.key=='Escape')close();else if(e.key=='Enter'&&e.target===inp)save()};
+ inp.addEventListener('input',show);
+ o.addEventListener('click',e=>{
+  const q=e.target.closest('[data-d]');
+  if(q){inp.value=q.dataset.d;show();return}
+  if(e.target===o||e.target.closest('.vm-cancel'))close();
+  else if(e.target.closest('.vm-save'))save();
+ });
+ document.addEventListener('keydown',key);
+ show();inp.focus();inp.select();
+};
 
 /**
  * Money dialog used by the dashboard "Add Money" / "Withdraw" buttons.

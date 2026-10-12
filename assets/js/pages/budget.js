@@ -4,11 +4,12 @@
  */
 (()=>{
 let view='all',sort='',emoji='📺';
-const stat=c=>c.pct>100?['danger','🔥 OVER LIMIT']:c.pct>=70?['caution','⚡ CAUTION']:c.pct>=40?['safe','✓ ON TRACK']:['healthy','● HEALTHY'];
-const bcls=c=>c.pct>100?'warn':c.pct>=70?'pink':'green';
+const RESERVED=['income','cash']; // used internally for deposits / withdrawals
+const stat=c=>c.over>0?['danger','🔥 OVER LIMIT']:c.pct>=70?['caution','⚡ CAUTION']:c.pct>=40?['safe','✓ ON TRACK']:['healthy','● HEALTHY'];
+const bcls=c=>c.over>0?'warn':c.pct>=70?'pink':'green';
 const rng=c=>`min="${Math.max(5,Math.round(c.l*.2))}" max="${Math.max(c.l*3,100)}" step="${c.l>=500?25:c.l>=100?10:5}" value="${c.l}"`;
-const card=c=>{const[q,l]=stat(c);return `<div class="budget-card${c.pct>100?' over-budget':''}" id="card-${c.c}"><button class="bc-remove" data-remove="${c.c}" title="Remove this limit" aria-label="Remove ${cap(c.c)} budget">✕</button><div class="limit-sticker"><span class="sticker-lbl">Limit</span><span class="sticker-val">${fmt(c.l)}</span></div><div class="bc-header"><div class="bc-icon">${c.e}</div><div class="bc-info"><div class="bc-category">Monthly Budget</div><div class="bc-merchant">${esc(c.c.toUpperCase())}</div></div></div><span class="bc-status ${q}">${l}</span><div class="bc-numbers"><div class="bc-spent">${fmt(c.sp)}</div><div class="bc-of">of</div><div class="bc-limit-inline">${fmt(c.l)}</div></div><div class="bc-bar-wrap"><div class="bc-bar-fill ${bcls(c)}" style="width:${Math.min(c.pct,100)}%"><span class="bc-pct" style="${c.pct>=70?'color:#fff':''}">${c.pct}%</span></div></div><div class="bc-slider-wrap"><div class="bc-slider-label"><span>Adjust Limit</span><span class="bc-slider-val">${fmt(c.l)}</span></div><input type="range" class="brute-slider" data-cat="${c.c}" ${rng(c)}></div></div>`};
-const grow=c=>{const mn=Math.max(5,Math.round(c.l*.2)),mx=Math.max(c.l*3,100);return `<div class="ga-row" id="g-${c.c}"><div class="ga-row-header"><span class="ga-row-name">${c.e} ${cap(c.c)}</span><span class="ga-row-amount">${fmt(c.l)}</span></div><div class="ga-track"><div class="ga-fill" style="width:${(c.l-mn)/(mx-mn)*100}%;background:${colorOf(c.c)}"></div><input type="range" class="ga-slider" data-cat="${c.c}" ${rng(c)}></div></div>`};
+const card=c=>{const[q,l]=stat(c);return `<div class="budget-card${c.over>0?' over-budget':''}" id="card-${esc(c.c)}"><button class="bc-remove" data-remove="${esc(c.c)}" title="Remove this limit" aria-label="Remove ${esc(cap(c.c))} budget">✕</button><div class="limit-sticker"><span class="sticker-lbl">Limit</span><span class="sticker-val">${fmt(c.l)}</span></div><div class="bc-header"><div class="bc-icon">${esc(c.e)}</div><div class="bc-info"><div class="bc-category">Monthly Budget</div><div class="bc-merchant">${esc(c.c.toUpperCase())}</div></div></div><span class="bc-status ${q}">${l}</span><div class="bc-numbers"><div class="bc-spent">${fmt(c.sp)}</div><div class="bc-of">of</div><div class="bc-limit-inline">${fmt(c.l)}</div></div><div class="bc-bar-wrap"><div class="bc-bar-fill ${bcls(c)}" style="width:${Math.min(c.pct,100)}%"><span class="bc-pct" style="${c.pct>=70?'color:#fff':''}">${c.pct}%</span></div></div><div class="bc-slider-wrap"><div class="bc-slider-label"><span>Adjust Limit</span><span class="bc-slider-val">${fmt(c.l)}</span></div><input type="range" class="brute-slider" data-cat="${esc(c.c)}" ${rng(c)}></div></div>`};
+const grow=c=>{const mn=Math.max(5,Math.round(c.l*.2)),mx=Math.max(c.l*3,100);return `<div class="ga-row" id="g-${esc(c.c)}"><div class="ga-row-header"><span class="ga-row-name">${esc(c.e)} ${esc(cap(c.c))}</span><span class="ga-row-amount">${fmt(c.l)}</span></div><div class="ga-track"><div class="ga-fill" style="width:${(c.l-mn)/(mx-mn)*100}%;background:${colorOf(c.c)}"></div><input type="range" class="ga-slider" data-cat="${esc(c.c)}" ${rng(c)}></div></div>`};
 function summary(st){
  const al=st.alloc,sp=st.tsp,left=al-sp,pct=al?Math.round(sp/al*100):0,x=V.insights(st);
  $('#tstats').innerHTML=[[fmt(sp),'Spent','var(--hot-pink)'],[fmt(left),'Remaining',left<0?'var(--hot-pink)':'#16A34A'],[pct+'%','Used','var(--orange)'],[st.cats.length,'Categories','']].map(a=>`<div class="title-stat"><span class="sv" style="color:${a[2]}">${a[0]}</span><span class="sl">${a[1]}</span></div>`).join('');
@@ -21,17 +22,18 @@ function build(){
  if(sort=='pct')L.sort((a,b)=>b.pct-a.pct);if(sort=='amt')L.sort((a,b)=>b.sp-a.sp);
  $('#budget-grid').innerHTML=L.map(card).join('')+`<div class="empty-card" role="button" tabindex="0" onclick="openModal()"><div class="empty-plus">＋</div><div class="empty-label">[+] ADD NEW LIMIT</div><div class="empty-sub">Click to set a budget category</div></div>`;
  $('#ga-sliders').innerHTML=st.cats.map(grow).join('');
- $('#page-super').textContent='💰 Monthly · '+mlabel();
+ $('#page-super').textContent='💰 Monthly · '+st.label;
  summary(st);
 }
 function upd(cat){
- const st=V.stats(V.get()),c=st.cats.find(x=>x.c==cat),el=$('#card-'+cat);
- if(el){const[q,l]=stat(c);el.classList.toggle('over-budget',c.pct>100);
+ const st=V.stats(V.get()),c=st.cats.find(x=>x.c==cat),el=document.getElementById('card-'+cat);
+ if(!c)return;
+ if(el){const[q,l]=stat(c);el.classList.toggle('over-budget',c.over>0);
   el.querySelector('.sticker-val').textContent=el.querySelector('.bc-slider-val').textContent=el.querySelector('.bc-limit-inline').textContent=fmt(c.l);
   const b=el.querySelector('.bc-bar-fill');b.style.width=Math.min(c.pct,100)+'%';b.className='bc-bar-fill '+bcls(c);
   const p=b.querySelector('.bc-pct');p.textContent=c.pct+'%';p.style.color=c.pct>=70?'#fff':'';
   const sb=el.querySelector('.bc-status');sb.className='bc-status '+q;sb.textContent=l}
- const g=$('#g-'+cat);if(g){const i=g.querySelector('input');g.querySelector('.ga-row-amount').textContent=fmt(c.l);g.querySelector('.ga-fill').style.width=(c.l-i.min)/(i.max-i.min)*100+'%'}
+ const g=document.getElementById('g-'+cat);if(g){const i=g.querySelector('input');g.querySelector('.ga-row-amount').textContent=fmt(c.l);g.querySelector('.ga-fill').style.width=(c.l-i.min)/(i.max-i.min)*100+'%'}
  $$('[data-cat="'+cat+'"]').forEach(i=>i.value=c.l);
  summary(st);
 }
@@ -46,11 +48,15 @@ window.pickEmoji=(b,e)=>{$$('.ep-btn').forEach(x=>x.classList.remove('chosen'));
 window.saveNewBudget=()=>{
  const key=$('#m-name').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''),lim=+$('#m-limit').value;
  if(!key||!(lim>0))return V.toast('Enter a name and a limit');
+ if(RESERVED.includes(key))return V.toast('That name is reserved — pick another');
  if(V.get().budgets[key])return V.toast('That category already exists');
  V.addCat(key,emoji,lim);$('#m-name').value=$('#m-limit').value='';closeModal();V.toast('✓ "'+key.toUpperCase()+'" budget created!');
 };
 window.saveBudgets=()=>V.toast('✅ Budgets saved on this device');
-document.addEventListener('keydown',e=>{if(e.key=='Escape')closeModal()});
+document.addEventListener('keydown',e=>{
+ if(e.key=='Escape')closeModal();
+ else if(e.key=='Enter'&&e.target.closest&&e.target.closest('#modal-overlay .form-input'))saveNewBudget();
+});
 $('#budget-grid').addEventListener('click',async e=>{
  const b=e.target.closest('[data-remove]');if(!b)return;
  const k=b.dataset.remove;
