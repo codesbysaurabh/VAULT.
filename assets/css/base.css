@@ -32,9 +32,7 @@
   --border-3: 3px solid #0A0A0A;
 }
 
-/* ─────────────────────────────────────
-RESET & BASE
-───────────────────────────────────── */
+/* RESET & BASE */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -61,9 +59,7 @@ body::before {
   z-index: 9999;
 }
 
-/* ─────────────────────────────────────
-TYPOGRAPHY UTILITIES
-───────────────────────────────────── */
+/* TYPOGRAPHY UTILITIES */
 .display {
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 0.03em;
@@ -73,9 +69,7 @@ TYPOGRAPHY UTILITIES
   font-family: 'DM Mono', monospace;
 }
 
-/* ─────────────────────────────────────
-LAYOUT WRAPPER
-───────────────────────────────────── */
+/* LAYOUT WRAPPER */
 .page-wrapper {
   max-width: 1200px;
   margin: 0 auto;
@@ -84,9 +78,7 @@ LAYOUT WRAPPER
   gap: var(--gap-lg);
 }
 
-/* ─────────────────────────────────────
-HEADER / NAV
-───────────────────────────────────── */
+/* HEADER / NAV */
 .site-header {
   display: flex;
   align-items: center;
@@ -154,9 +146,7 @@ HEADER / NAV
   border: var(--border-width) solid var(--black);
 }
 
-/* ─────────────────────────────────────
-FOOTER
-───────────────────────────────────── */
+/* FOOTER */
 .site-footer {
   display: flex;
   justify-content: space-between;
@@ -299,3 +289,25 @@ FOOTER
 .vm-save:active, .vm-cancel:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 #0A0A0A; }
 
 .vm-text { margin: 14px 0 18px; font-size: 0.95rem; font-weight: 600; line-height: 1.5; opacity: 0.8; }
+
+/* ── Mobile (shared) ─────────────────────────────────────── */
+html, body { overflow-x: hidden; }
+.page-wrapper > * { min-width: 0; }
+
+@media (max-width: 700px) {
+  html body { padding: 12px; }
+
+  /* header: logo + badge on row 1, swipeable nav on row 2 */
+  .page-wrapper .site-header { flex-wrap: wrap; gap: 10px; padding: 12px 14px; box-shadow: 4px 4px 0 0 #0A0A0A; }
+  .page-wrapper .site-header .site-logo { font-size: 1.7rem; }
+  .page-wrapper .site-header .header-badge { margin-left: auto; }
+  .site-header nav { order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .site-header nav::-webkit-scrollbar { display: none; }
+  .site-header .nav-pills { display: flex; width: max-content; gap: 8px; }
+  .site-header .nav-pills a { padding: 5px 12px; white-space: nowrap; }
+
+  .page-wrapper .site-footer { flex-direction: column; gap: 8px; text-align: center; }
+  input.form-input, input.search-input { font-size: 16px; } /* stops iOS zoom-on-focus */
+  #vt { left: 12px; right: 12px; bottom: 16px; text-align: center; }
+  .vm-box { padding: 20px; max-height: 92vh; overflow-y: auto; }
+}

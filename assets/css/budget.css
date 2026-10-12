@@ -33,9 +33,7 @@ body::before {
   z-index: 9999;
 }
 
-/* ════════════════════════════════════════════════
-PAGE WRAPPER
-════════════════════════════════════════════════ */
+/* PAGE WRAPPER */
 .page-wrapper {
   max-width: 1260px;
   margin: 0 auto;
@@ -58,9 +56,7 @@ PAGE WRAPPER
   transition: background .1s, color .1s;
 }
 
-/* ════════════════════════════════════════════════
-MASSIVE PAGE TITLE
-════════════════════════════════════════════════ */
+/* MASSIVE PAGE TITLE */
 .page-title-block {
   position: relative;
   padding: 32px 36px 28px;
@@ -166,9 +162,7 @@ MASSIVE PAGE TITLE
   margin-top: 2px;
 }
 
-/* ════════════════════════════════════════════════
-TOOLBAR
-════════════════════════════════════════════════ */
+/* TOOLBAR */
 .toolbar {
   display: flex;
   align-items: center;
@@ -207,7 +201,6 @@ TOOLBAR
 }
 
 .tb-chip:hover { background: var(--black); color: var(--white); transform: translate(-1px,-1px); box-shadow: 5px 5px 0 0 var(--black); }
-
 .tb-chip.on    { background: var(--black); color: var(--neon-green); }
 
 .tb-sep { width: 1px; height: 24px; background: var(--black); opacity: 0.14; margin: 0 6px; }
@@ -232,12 +225,9 @@ TOOLBAR
 }
 
 .add-btn:hover { transform: translate(-2px,-2px); box-shadow: var(--shadow-md); }
-
 .add-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 0 var(--black); }
 
-/* ════════════════════════════════════════════════
-BUDGET GRID
-════════════════════════════════════════════════ */
+/* BUDGET GRID */
 .budget-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -245,9 +235,7 @@ BUDGET GRID
   align-items: start;
 }
 
-/* ════════════════════════════════════════════════
-BUDGET CARD BASE
-════════════════════════════════════════════════ */
+/* BUDGET CARD BASE */
 .budget-card {
   position: relative;
   background: var(--white);
@@ -264,19 +252,12 @@ BUDGET CARD BASE
 
 /* Flying Papers toss */
 .budget-card:nth-child(1)  { transform: rotate(-0.6deg); background: #FFFFFF; }
-
 .budget-card:nth-child(2)  { transform: rotate(0.9deg);  background: var(--electric-blue); margin-top: 8px; }
-
 .budget-card:nth-child(3)  { transform: rotate(-1.1deg); background: var(--hot-pink); color: var(--white); }
-
 .budget-card:nth-child(4)  { transform: rotate(0.5deg);  background: var(--yellow); margin-top: -5px; }
-
 .budget-card:nth-child(5)  { transform: rotate(-0.4deg); background: var(--neon-green); }
-
 .budget-card:nth-child(6)  { transform: rotate(1.2deg);  background: var(--orange); color: var(--white); margin-top: 6px; }
-
 .budget-card:nth-child(7)  { transform: rotate(-0.8deg); background: var(--purple); }
-
 .budget-card:nth-child(8)  { transform: rotate(0.7deg);  background: var(--white); margin-top: -4px; }
 
 .budget-card:hover {
@@ -309,9 +290,7 @@ BUDGET CARD BASE
   50%      { background: #FF1E00;        box-shadow: var(--shadow-xl); }
 }
 
-/* ════════════════════════════════════════════════
-LIMIT STICKER (post-it stuck on corner)
-════════════════════════════════════════════════ */
+/* LIMIT STICKER (post-it stuck on corner) */
 .limit-sticker {
   position: absolute;
   top: -14px;
@@ -351,9 +330,7 @@ LIMIT STICKER (post-it stuck on corner)
   color: var(--black);
 }
 
-/* ════════════════════════════════════════════════
-CARD HEADER
-════════════════════════════════════════════════ */
+/* CARD HEADER */
 .bc-header {
   display: flex;
   align-items: flex-start;
@@ -394,9 +371,7 @@ CARD HEADER
   letter-spacing: 0.03em;
 }
 
-/* ════════════════════════════════════════════════
-SPEND NUMBERS
-════════════════════════════════════════════════ */
+/* SPEND NUMBERS */
 .bc-numbers {
   display: flex;
   align-items: baseline;
@@ -423,9 +398,7 @@ SPEND NUMBERS
   font-weight: 700;
 }
 
-/* ════════════════════════════════════════════════
-LIQUID PROGRESS BAR
-════════════════════════════════════════════════ */
+/* LIQUID PROGRESS BAR */
 .bc-bar-wrap {
   border: var(--border-thin);
   border-radius: 4px;
@@ -454,9 +427,7 @@ LIQUID PROGRESS BAR
 }
 
 .bc-bar-fill.pink  { background: var(--hot-pink); }
-
 .bc-bar-fill.green { background: var(--neon-green); }
-
 .bc-bar-fill.warn  { background: var(--warning); border-right-color: var(--black); animation: barPulse 1s ease-in-out infinite; }
 
 @keyframes barPulse {
@@ -473,9 +444,7 @@ LIQUID PROGRESS BAR
   text-shadow: none;
 }
 
-/* ════════════════════════════════════════════════
-BUDGET SLIDER (Brutalist)
-════════════════════════════════════════════════ */
+/* BUDGET SLIDER (Brutalist) */
 .bc-slider-wrap {
   display: flex;
   flex-direction: column;
@@ -547,9 +516,7 @@ input[type="range"].brute-slider::-moz-range-thumb {
 .budget-card:nth-child(3) input[type="range"].brute-slider::-webkit-slider-thumb,
 .budget-card:nth-child(6) input[type="range"].brute-slider::-webkit-slider-thumb { background: var(--white); }
 
-/* ════════════════════════════════════════════════
-STATUS BADGE
-════════════════════════════════════════════════ */
+/* STATUS BADGE */
 .bc-status {
   display: inline-flex;
   align-items: center;
@@ -566,11 +533,8 @@ STATUS BADGE
 }
 
 .bc-status.safe      { background: var(--neon-green); color: var(--black); }
-
 .bc-status.caution   { background: var(--orange);     color: var(--white); }
-
 .bc-status.danger    { background: var(--warning);    color: var(--white); animation: badgePulse 1s ease-in-out infinite; }
-
 .bc-status.healthy   { background: #4ADE80;           color: var(--black); }
 
 @keyframes badgePulse {
@@ -578,9 +542,7 @@ STATUS BADGE
   50%      { opacity: 0.7; }
 }
 
-/* ════════════════════════════════════════════════
-EMPTY STATE CARD
-════════════════════════════════════════════════ */
+/* EMPTY STATE CARD */
 .empty-card {
   position: relative;
   border: 4px dashed var(--black);
@@ -632,9 +594,7 @@ EMPTY STATE CARD
   letter-spacing: 0.06em;
 }
 
-/* ════════════════════════════════════════════════
-BOTTOM PANEL — Global Slider + Summary
-════════════════════════════════════════════════ */
+/* BOTTOM PANEL — Global Slider + Summary */
 .bottom-panel {
   display: grid;
   grid-template-columns: 1fr 380px;
@@ -728,13 +688,9 @@ BOTTOM PANEL — Global Slider + Summary
 }
 
 .ga-fill.f-pink  { background: var(--hot-pink); }
-
 .ga-fill.f-green { background: var(--neon-green); }
-
 .ga-fill.f-yellow{ background: var(--yellow); }
-
 .ga-fill.f-blue  { background: var(--electric-blue); }
-
 .ga-fill.f-purple{ background: var(--purple); }
 
 input[type="range"].ga-slider {
@@ -816,7 +772,6 @@ input[type="range"].ga-slider::-moz-range-thumb {
 }
 
 .ga-btn:hover { transform: translate(-2px,-2px); box-shadow: var(--shadow-lg); }
-
 .ga-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 0 var(--black); }
 
 /* ── Right Summary Card ── */
@@ -834,9 +789,7 @@ input[type="range"].ga-slider::-moz-range-thumb {
 }
 
 .sa-card.black { background: var(--black); color: var(--white); transform: rotate(0.4deg); }
-
 .sa-card.pink  { background: var(--hot-pink); color: var(--white); transform: rotate(-0.5deg); }
-
 .sa-card.green { background: var(--neon-green); color: var(--black); transform: rotate(0.3deg); }
 
 .sa-label {
@@ -906,9 +859,7 @@ input[type="range"].ga-slider::-moz-range-thumb {
 
 .insight-cta:hover { transform: translate(-1px,-1px); box-shadow: var(--shadow-md); }
 
-/* ════════════════════════════════════════════════
-FOOTER
-════════════════════════════════════════════════ */
+/* FOOTER */
 .site-footer {
   background: var(--black);
   color: var(--white);
@@ -931,9 +882,7 @@ FOOTER
   letter-spacing: 0.08em;
 }
 
-/* ════════════════════════════════════════════════
-MODAL — Add New Budget
-════════════════════════════════════════════════ */
+/* MODAL — Add New Budget */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1028,7 +977,6 @@ MODAL — Add New Budget
 }
 
 .ep-btn:hover  { background: var(--neon-green); transform: translate(-1px,-1px); box-shadow: 4px 4px 0 0 var(--black); }
-
 .ep-btn.chosen { background: var(--black); }
 
 .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
@@ -1069,9 +1017,7 @@ MODAL — Add New Budget
 
 .btn-modal-cancel:hover { transform: translate(-1px,-1px); }
 
-/* ════════════════════════════════════════════════
-RESPONSIVE
-════════════════════════════════════════════════ */
+/* RESPONSIVE */
 @media (max-width: 640px) {
   .budget-grid { grid-template-columns: 1fr; }
   .page-h1 { font-size: 3.5rem; }
@@ -1100,3 +1046,34 @@ RESPONSIVE
 }
 .bc-remove:hover { background: #FF2D78; color: #fff; transform: translate(-1px, -1px); box-shadow: 5px 5px 0 0 #0A0A0A; }
 .bc-remove:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 0 #0A0A0A; }
+
+/* ── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .page-title-block { padding: 28px 16px 18px; transform: none; box-shadow: 6px 6px 0 0 #0A0A0A; }
+  .page-title-block::before { display: none; }
+  .page-title-text { padding-top: 0; }
+  .page-h1 { font-size: 3.4rem; }
+  .title-right { width: 100%; padding-top: 0; align-items: stretch; }
+  .title-stat-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
+
+  .toolbar { padding: 12px; gap: 8px; }
+  .toolbar-label { width: 100%; margin: 0; }
+  .tb-sep { display: none; }
+  .add-btn { width: 100%; justify-content: center; margin-left: 0; }
+
+  .budget-grid { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .budget-card, .budget-card:nth-child(n) { margin-top: 0; min-height: 0; padding: 20px 16px 16px; }
+  .budget-card, .budget-card:hover, .budget-card.over-budget, .budget-card.over-budget:hover {
+    transform: none !important; box-shadow: 6px 6px 0 0 #0A0A0A !important;
+  }
+  .bc-spent { font-size: 2.6rem; }
+  .empty-card { min-height: 160px; }
+
+  .bottom-panel { grid-template-columns: minmax(0, 1fr); }
+  .global-adjuster { padding: 20px 16px; transform: none; box-shadow: 6px 6px 0 0 #0A0A0A; }
+  .sa-card.black, .sa-card.pink, .sa-card.green, .insight-blob { transform: none; }
+
+  .modal { padding: 20px; max-height: 92vh; overflow-y: auto; transform: none; }
+  .emoji-picker { gap: 6px; }
+  .ep-btn { height: 40px; }
+}

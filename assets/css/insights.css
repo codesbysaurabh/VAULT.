@@ -14,9 +14,7 @@
   --badge-bg: var(--cyan);
 }
 
-/* ══════════════════════════════════════════════════
-DOT-GRID BODY
-══════════════════════════════════════════════════ */
+/* DOT-GRID BODY */
 body {
   font-family: 'Outfit', sans-serif;
   color: var(--black);
@@ -50,14 +48,10 @@ mark {
 }
 
 mark.pink  { background: var(--hot-pink);      color: var(--white); }
-
 mark.green { background: var(--neon-green);    color: var(--black); }
-
 mark.cyan  { background: var(--electric-blue); color: var(--black); }
 
-/* ══════════════════════════════════════════════════
-PAGE WRAPPER
-══════════════════════════════════════════════════ */
+/* PAGE WRAPPER */
 .page-wrapper {
   max-width: 1280px;
   margin: 0 auto;
@@ -66,9 +60,7 @@ PAGE WRAPPER
   gap: 0; /* we handle gaps manually for overlaps */
 }
 
-/* ══════════════════════════════════════════════════
-HEADER
-══════════════════════════════════════════════════ */
+/* HEADER */
 .site-header {
   display: flex;
   align-items: center;
@@ -95,21 +87,13 @@ HEADER
   transition: background .1s, color .1s;
 }
 
-/* ══════════════════════════════════════════════════
-SECTION SPACING HELPERS (flying papers overlap)
-══════════════════════════════════════════════════ */
+/* SECTION SPACING HELPERS (flying papers overlap) */
 .mt-24 { margin-top: 24px; }
-
 .mt-16 { margin-top: 16px; }
-
 .mt-neg { margin-top: -20px; }
-
-/* overlapping scatter */
 .ml-neg { margin-left: -10px; }
 
-/* ══════════════════════════════════════════════════
-██  HERO CARD — BIG REVEAL + BAR CHART
-══════════════════════════════════════════════════ */
+/* HERO CARD — BIG REVEAL + BAR CHART */
 .hero-card {
   background: var(--black);
   border: var(--border);
@@ -150,7 +134,6 @@ SECTION SPACING HELPERS (flying papers overlap)
 @media (max-width: 860px) { .hero-inner { grid-template-columns: 1fr; } }
 
 /* ── Left: Headline ── */
-/* .hero-left { } */
 .hero-eyebrow {
   font-family: 'DM Mono', monospace;
   font-size: 0.62rem;
@@ -194,13 +177,10 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .hero-pill.p-green { background: var(--neon-green); color: var(--black); box-shadow: 3px 3px 0 0 #0A0A0A; }
-
 .hero-pill.p-pink  { background: var(--hot-pink);   color: var(--white); box-shadow: 3px 3px 0 0 #0A0A0A; }
-
 .hero-pill.p-cyan  { background: var(--cyan);       color: var(--black); box-shadow: 3px 3px 0 0 #0A0A0A; }
 
 /* ── Right: CSS-Only Bar Chart ── */
-/* .hero-right { } */
 .chart-label-top {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.2rem;
@@ -211,13 +191,11 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 /*
-* ════════════════════════════════════
-* CSS-ONLY FLEXBOX BAR CHART
-* Change bar height by setting --h on
-* each .bar element via style attribute:
-*   style="--h: 65%"
-* ════════════════════════════════════
-*/
+ * CSS-ONLY FLEXBOX BAR CHART
+ * Change bar height by setting --h on
+ * each .bar element via style attribute:
+ *   style="--h: 65%"
+ */
 .bar-chart {
   display: flex;
   align-items: flex-end;    /* bars grow upward from baseline */
@@ -306,25 +284,17 @@ SECTION SPACING HELPERS (flying papers overlap)
 
 /* individual bar colors */
 .bar.c-green { background: var(--neon-green); }
-
 .bar.c-pink  { background: var(--hot-pink); }
-
 .bar.c-cyan  { background: var(--cyan); }
-
 .bar.c-yellow{ background: var(--yellow); }
-
 .bar.c-orange{ background: var(--orange); }
-
 .bar.c-purple{ background: var(--purple); }
-
 .bar.c-blue  { background: var(--electric-blue); }
 
 /* "this week" highlight ring */
 .bar.highlight { box-shadow: 0 0 0 3px var(--white), 0 0 0 6px var(--hot-pink); }
 
-/* ══════════════════════════════════════════════════
-██  ROW: STACK BAR + VIBE CARDS
-══════════════════════════════════════════════════ */
+/* ROW: STACK BAR + VIBE CARDS */
 .mid-row {
   display: grid;
   grid-template-columns: 1fr 420px;
@@ -334,9 +304,7 @@ SECTION SPACING HELPERS (flying papers overlap)
 
 @media (max-width: 900px) { .mid-row { grid-template-columns: 1fr; } }
 
-/* ══════════════════════════════════════════════════
-██  STACK BAR (Spending Breakdown)
-══════════════════════════════════════════════════ */
+/* STACK BAR (Spending Breakdown) */
 .stack-card {
   background: var(--white);
   border: var(--border);
@@ -389,19 +357,13 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .seg:last-child { border-right: none; }
-
 .seg:hover { filter: brightness(1.12); z-index: 5; }
 
 .seg.s-green  { background: var(--neon-green); }
-
 .seg.s-pink   { background: var(--hot-pink); }
-
 .seg.s-yellow { background: var(--yellow); }
-
 .seg.s-cyan   { background: var(--electric-blue); }
-
 .seg.s-orange { background: var(--orange); }
-
 .seg.s-purple { background: var(--purple); }
 
 .seg-inner-label {
@@ -483,9 +445,7 @@ SECTION SPACING HELPERS (flying papers overlap)
   flex-shrink: 0;
 }
 
-/* ══════════════════════════════════════════════════
-██  VIBE COMPARISON CARDS
-══════════════════════════════════════════════════ */
+/* VIBE COMPARISON CARDS */
 .vibe-col {
   display: flex;
   flex-direction: column;
@@ -504,7 +464,6 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .vibe-card.last-month { transform: rotate(-0.7deg); background: var(--white); }
-
 .vibe-card.this-month { transform: rotate(0.9deg);  background: var(--black); color: var(--white); margin-top: -10px; }
 
 .vibe-label {
@@ -552,7 +511,6 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .vibe-arrow.down { color: #16A34A; opacity: 0.28; }
-
 .vibe-arrow.up   { color: var(--hot-pink); opacity: 0.35; }
 
 .vibe-badge {
@@ -571,12 +529,9 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .badge-down { background: var(--neon-green); color: var(--black); box-shadow: 3px 3px 0 0 #0A0A0A; }
-
 .badge-up   { background: var(--hot-pink);   color: var(--white); box-shadow: 3px 3px 0 0 #0A0A0A; }
 
-/* ══════════════════════════════════════════════════
-██  BOTTOM GRID — Hall of Shame + Side Cards
-══════════════════════════════════════════════════ */
+/* BOTTOM GRID — Hall of Shame + Side Cards */
 .bottom-grid {
   display: grid;
   grid-template-columns: 1fr 340px;
@@ -586,9 +541,7 @@ SECTION SPACING HELPERS (flying papers overlap)
 
 @media (max-width: 900px) { .bottom-grid { grid-template-columns: 1fr; } }
 
-/* ══════════════════════════════════════════════════
-██  HALL OF SHAME / FAME
-══════════════════════════════════════════════════ */
+/* HALL OF SHAME / FAME */
 .hall-card {
   background: var(--white);
   border: var(--border);
@@ -635,9 +588,7 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .rank-item:nth-child(1) { background: var(--hot-pink); color: var(--white); transform: rotate(-0.4deg); box-shadow: var(--shadow-md); }
-
 .rank-item:nth-child(2) { background: var(--yellow);   color: var(--black); transform: rotate(0.5deg);  box-shadow: var(--shadow-sm); }
-
 .rank-item:nth-child(3) { background: var(--bg);       color: var(--black); transform: rotate(-0.3deg); box-shadow: var(--shadow-sm); }
 
 .rank-item:hover { transform: rotate(0deg) scale(1.02) !important; box-shadow: var(--shadow-lg) !important; z-index: 10; }
@@ -720,9 +671,7 @@ SECTION SPACING HELPERS (flying papers overlap)
   background: rgba(0,0,0,0.3);
 }
 
-/* ══════════════════════════════════════════════════
-██  SIDE CARDS (right column)
-══════════════════════════════════════════════════ */
+/* SIDE CARDS (right column) */
 .side-col {
   display: flex;
   flex-direction: column;
@@ -829,9 +778,7 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .streak-day.good    { background: var(--neon-green); border-color: var(--neon-green); color: var(--black); }
-
 .streak-day.bad     { background: var(--hot-pink);   border-color: var(--hot-pink);   color: var(--white); }
-
 .streak-day.neutral { background: rgba(255,255,255,0.08); }
 
 /* AI Tip Card */
@@ -893,9 +840,7 @@ SECTION SPACING HELPERS (flying papers overlap)
 
 .tip-cta:hover { transform: translate(-1px,-1px); box-shadow: var(--shadow-md); }
 
-/* ══════════════════════════════════════════════════
-██  SECOND BAR CHART SECTION (weekly spend trend)
-══════════════════════════════════════════════════ */
+/* SECOND BAR CHART SECTION (weekly spend trend) */
 .trend-section {
   margin-top: 22px;
   display: grid;
@@ -947,7 +892,6 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .bar-chart.light .bar::before { color: var(--black); }
-
 .bar-chart.light .bar-xlabel  { color: rgba(0,0,0,0.4); }
 
 /* Y-axis labels */
@@ -1014,16 +958,11 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .hm-low    { background: #d4f9a0; }
-
 .hm-mid    { background: var(--neon-green); }
-
 .hm-high   { background: var(--orange); color: var(--white); }
-
 .hm-extreme{ background: var(--red); color: var(--white); }
 
-/* ══════════════════════════════════════════════════
-██  FOOTER
-══════════════════════════════════════════════════ */
+/* FOOTER */
 .site-footer {
   background: var(--black);
   color: var(--white);
@@ -1046,9 +985,7 @@ SECTION SPACING HELPERS (flying papers overlap)
   color: var(--neon-green);
 }
 
-/* ══════════════════════════════════════════════════
-██  PERIOD TOGGLE
-══════════════════════════════════════════════════ */
+/* PERIOD TOGGLE */
 .period-toggle {
   display: flex;
   gap: 0;
@@ -1073,33 +1010,22 @@ SECTION SPACING HELPERS (flying papers overlap)
 }
 
 .pt-btn:last-child { border-right: none; }
-
 .pt-btn.active, .pt-btn:hover { background: var(--black); color: var(--neon-green); }
 
-/* ══════════════════════════════════════════════════
-STAGGER ENTRANCE ANIMATION
-══════════════════════════════════════════════════ */
+/* STAGGER ENTRANCE ANIMATION */
 @keyframes riseIn {
   from { opacity: 0; transform: translateY(22px) rotate(var(--rot, 0deg)); }
   to   { opacity: 1; transform: translateY(0)    rotate(var(--rot, 0deg)); }
 }
 
 .hero-card          { --rot: -0.3deg; animation: riseIn 0.5s ease both;       animation-delay: 0.05s; }
-
 .stack-card         { --rot:  0.4deg; animation: riseIn 0.5s ease both;       animation-delay: 0.15s; }
-
 .vibe-card          {                 animation: riseIn 0.5s ease both;       animation-delay: 0.20s; }
-
 .hall-card          { --rot: -0.5deg; animation: riseIn 0.5s ease both;       animation-delay: 0.25s; }
-
 .predict-card       { --rot:  0.6deg; animation: riseIn 0.5s ease both;       animation-delay: 0.30s; }
-
 .streak-card        { --rot: -0.5deg; animation: riseIn 0.5s ease both;       animation-delay: 0.35s; }
-
 .tip-card           { --rot:  0.4deg; animation: riseIn 0.5s ease both;       animation-delay: 0.40s; }
-
 .trend-card         { --rot:  0.3deg; animation: riseIn 0.5s ease both;       animation-delay: 0.45s; }
-
 .heatmap-card       { --rot: -0.6deg; animation: riseIn 0.5s ease both;       animation-delay: 0.50s; }
 
 /* bar grow-up animation */
@@ -1109,19 +1035,51 @@ STAGGER ENTRANCE ANIMATION
 }
 
 .bar { animation: barGrow 0.8s cubic-bezier(.22,.61,.36,1) both; }
-
 .bar-col:nth-child(1) .bar { animation-delay: 0.1s; }
-
 .bar-col:nth-child(2) .bar { animation-delay: 0.15s; }
-
 .bar-col:nth-child(3) .bar { animation-delay: 0.20s; }
-
 .bar-col:nth-child(4) .bar { animation-delay: 0.25s; }
-
 .bar-col:nth-child(5) .bar { animation-delay: 0.30s; }
-
 .bar-col:nth-child(6) .bar { animation-delay: 0.35s; }
-
 .bar-col:nth-child(7) .bar { animation-delay: 0.40s; }
-
 .bar-col:nth-child(8) .bar { animation-delay: 0.45s; }
+
+/* ── Mobile ──────────────────────────────────────────────── */
+.legend-pct { display: none; opacity: .6; }
+
+@media (max-width: 700px) {
+  /* flatten the tilted cards (--rot also feeds the riseIn animation) */
+  .hero-card, .stack-card, .hall-card, .predict-card, .streak-card, .tip-card, .trend-card, .heatmap-card { --rot: 0deg; transform: none; }
+  .hero-card { padding: 34px 16px 18px; box-shadow: 6px 6px 0 0 #0A0A0A; }
+  .stack-card, .hall-card, .trend-card { padding: 20px 16px; box-shadow: 6px 6px 0 0 #0A0A0A; }
+  .predict-card, .tip-card, .streak-card, .heatmap-card, .vibe-card { box-shadow: 5px 5px 0 0 #0A0A0A; }
+  .streak-card, .vibe-card.this-month { margin-top: 0; }
+
+  .hero-inner { gap: 20px; padding-top: 30px; }
+  .hero-headline { font-size: 1.5rem; }
+  .hero-pill { font-size: .62rem; padding: 5px 10px; }
+
+  /* charts: room for the y-axis labels, slimmer bars and labels */
+  .bar-chart { margin-left: 36px; gap: 4px; }
+  .bar { border-width: 3px; }
+  .bar::before { font-size: .5rem; }
+  .bar-col { min-width: 0; }
+  .bar-xlabel { font-size: .5rem; }
+
+  .mid-row, .bottom-grid, .trend-section { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 16px; }
+
+  /* stacked bar: labels can't fit, the legend carries names + % instead */
+  .stack-bar { margin-bottom: 14px; }
+  .seg-leader, .seg-inner-label { display: none; }
+  .legend-pct { display: inline; }
+
+  .rank-item, .rank-item:hover { transform: none !important; }
+  .rank-item { padding: 12px; gap: 10px; }
+  .rank-icon-box { width: 42px; height: 42px; font-size: 1.2rem; }
+  .rank-name { font-size: 1.25rem; }
+  .rank-amount { font-size: 1.4rem; }
+  .rank-num { font-size: 4.5rem; }
+
+  .heatmap-grid { grid-template-columns: repeat(2, 1fr); }
+  .side-col { gap: 14px; }
+}

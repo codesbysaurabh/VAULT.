@@ -28,9 +28,7 @@
   transition: background 0.1s, color 0.1s;
 }
 
-/* ─────────────────────────────────────
-PAGE HERO BANNER
-───────────────────────────────────── */
+/* PAGE HERO BANNER */
 .page-hero {
   background: var(--black);
   border: var(--border);
@@ -124,9 +122,7 @@ PAGE HERO BANNER
 }
 
 .hero-stat-pill .pill-val.red   { color: var(--red-expense); }
-
 .hero-stat-pill .pill-val.green { color: #16A34A; }
-
 .hero-stat-pill .pill-val.blue  { color: #0066CC; }
 
 .hero-stat-pill .pill-label {
@@ -140,9 +136,7 @@ PAGE HERO BANNER
   display: block;
 }
 
-/* ─────────────────────────────────────
-FILTER BAR
-───────────────────────────────────── */
+/* FILTER BAR */
 .filter-bar {
   display: flex;
   align-items: center;
@@ -189,11 +183,8 @@ FILTER BAR
 }
 
 .filter-chip.active.pink  { background: var(--hot-pink); }
-
 .filter-chip.active.green { background: var(--neon-green); color: var(--black); }
-
 .filter-chip.active.blue  { background: var(--electric-blue); color: var(--black); }
-
 .filter-chip.active.yell  { background: var(--yellow); color: var(--black); }
 
 .filter-sep {
@@ -233,9 +224,7 @@ FILTER BAR
 
 .search-input::placeholder { opacity: 0.4; }
 
-/* ─────────────────────────────────────
-MAIN LAYOUT (two cols)
-───────────────────────────────────── */
+/* MAIN LAYOUT (two cols) */
 .main-layout {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -247,9 +236,7 @@ MAIN LAYOUT (two cols)
   .main-layout { grid-template-columns: 1fr; }
 }
 
-/* ─────────────────────────────────────
-BENTO TRANSACTION CONTAINER
-───────────────────────────────────── */
+/* BENTO TRANSACTION CONTAINER */
 .txn-bento {
   background: var(--white);
   border: 4px solid var(--black);
@@ -286,9 +273,7 @@ BENTO TRANSACTION CONTAINER
   font-family: 'DM Mono', monospace;
 }
 
-/* ─────────────────────────────────────
-SCROLLABLE TRANSACTION LIST AREA
-───────────────────────────────────── */
+/* SCROLLABLE TRANSACTION LIST AREA */
 .txn-scroll-area {
   max-height: 680px;
   overflow-y: auto;
@@ -297,18 +282,12 @@ SCROLLABLE TRANSACTION LIST AREA
 
 /* Custom Thick Rectangular Scrollbar */
 .txn-scroll-area::-webkit-scrollbar        { width: 12px; }
-
 .txn-scroll-area::-webkit-scrollbar-track  { background: var(--bg); border: 3px solid var(--black); border-radius: 0; }
-
 .txn-scroll-area::-webkit-scrollbar-thumb  { background: var(--black); border-radius: 0; border: none; }
-
 .txn-scroll-area::-webkit-scrollbar-thumb:hover { background: #333; }
-
 .txn-scroll-area { scrollbar-width: thick; scrollbar-color: var(--black) var(--bg); }
 
-/* ─────────────────────────────────────
-DATE GROUP SEPARATOR
-───────────────────────────────────── */
+/* DATE GROUP SEPARATOR */
 .date-group-label {
   font-family: 'DM Mono', monospace;
   font-size: 0.62rem;
@@ -330,9 +309,7 @@ DATE GROUP SEPARATOR
   opacity: 0.12;
 }
 
-/* ─────────────────────────────────────
-TRANSACTION CARD (FLYING PAPERS)
-───────────────────────────────────── */
+/* TRANSACTION CARD (FLYING PAPERS) */
 .txn-card {
   display: flex;
   align-items: center;
@@ -350,27 +327,16 @@ TRANSACTION CARD (FLYING PAPERS)
 
 /* — tossed rotations — */
 .txn-card:nth-child(1)  { transform: rotate(1deg);    box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(2)  { transform: rotate(-1.5deg); box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(3)  { transform: rotate(0.5deg);  box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(4)  { transform: rotate(-0.8deg); box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(5)  { transform: rotate(1.2deg);  box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(6)  { transform: rotate(-0.4deg); box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(7)  { transform: rotate(0.9deg);  box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(8)  { transform: rotate(-1.2deg); box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(9)  { transform: rotate(0.6deg);  box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(10) { transform: rotate(-0.7deg); box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(11) { transform: rotate(1.4deg);  box-shadow: 5px 5px 0 0 var(--black); }
-
 .txn-card:nth-child(12) { transform: rotate(-1.1deg); box-shadow: 5px 5px 0 0 var(--black); }
 
 /* — hover: lifts off the paper — */
@@ -386,9 +352,7 @@ TRANSACTION CARD (FLYING PAPERS)
   box-shadow: 3px 3px 0 0 var(--black) !important;
 }
 
-/* ─────────────────────────────────────
-ICON BOX
-───────────────────────────────────── */
+/* ICON BOX */
 .txn-icon-box {
   width: 48px;
   height: 48px;
@@ -403,9 +367,7 @@ ICON BOX
   box-shadow: 3px 3px 0 0 var(--black);
 }
 
-/* ─────────────────────────────────────
-TRANSACTION INFO
-───────────────────────────────────── */
+/* TRANSACTION INFO */
 .txn-body { flex: 1; min-width: 0; }
 
 .txn-merchant {
@@ -433,9 +395,7 @@ TRANSACTION INFO
   opacity: 0.45;
 }
 
-/* ─────────────────────────────────────
-PILL / STICKER TAGS
-───────────────────────────────────── */
+/* PILL / STICKER TAGS */
 .pill {
   display: inline-block;
   padding: 2px 9px;
@@ -449,34 +409,20 @@ PILL / STICKER TAGS
 }
 
 .pill-food      { background: var(--neon-green); color: var(--black); }
-
 .pill-gaming    { background: var(--hot-pink); color: var(--white); }
-
 .pill-transport { background: var(--electric-blue); color: var(--black); }
-
 .pill-fashion   { background: var(--yellow); color: var(--black); }
-
 .pill-bills     { background: var(--orange); color: var(--white); }
-
 .pill-coffee    { background: #C89B6E; color: var(--white); }
-
 .pill-music     { background: #C084FC; color: var(--black); }
-
 .pill-fitness   { background: #4ADE80; color: var(--black); }
-
 .pill-income    { background: var(--neon-green); color: var(--black); }
-
 .pill-health    { background: #F87171; color: var(--white); }
-
 .pill-travel    { background: var(--electric-blue); color: var(--black); }
-
 .pill-utilities { background: #94A3B8; color: var(--white); }
-
 .pill-dining    { background: var(--orange); color: var(--white); }
 
-/* ─────────────────────────────────────
-AMOUNT BOX
-───────────────────────────────────── */
+/* AMOUNT BOX */
 .txn-amount-box {
   font-family: 'DM Mono', monospace;
   font-size: 0.9rem;
@@ -500,9 +446,7 @@ AMOUNT BOX
   box-shadow: 2px 2px 0 0 var(--black);
 }
 
-/* ─────────────────────────────────────
-SIDEBAR
-───────────────────────────────────── */
+/* SIDEBAR */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -583,7 +527,6 @@ SIDEBAR
 }
 
 .split-item .split-val.red   { color: #FF6B6B; }
-
 .split-item .split-val.green { color: var(--neon-green); }
 
 /* ── Spend Donut / Category Breakdown ── */
@@ -728,9 +671,7 @@ SIDEBAR
   box-shadow: var(--shadow-md);
 }
 
-/* ─────────────────────────────────────
-LOAD MORE BAR
-───────────────────────────────────── */
+/* LOAD MORE BAR */
 .load-more-bar {
   display: flex;
   align-items: center;
@@ -765,9 +706,7 @@ LOAD MORE BAR
   box-shadow: 2px 2px 0 0 var(--black);
 }
 
-/* ─────────────────────────────────────
-FOOTER
-───────────────────────────────────── */
+/* FOOTER */
 .site-footer {
   background: var(--black);
   color: var(--white);
@@ -790,9 +729,7 @@ FOOTER
   letter-spacing: 0.08em;
 }
 
-/* ─────────────────────────────────────
-RESPONSIVE
-───────────────────────────────────── */
+/* RESPONSIVE */
 @media (max-width: 640px) {
   .hero-stats { gap: 8px; }
   .hero-stat-pill { padding: 8px 12px; }
@@ -800,4 +737,31 @@ RESPONSIVE
   .filter-bar { gap: 6px; }
   .search-box { margin-left: 0; width: 100%; }
   .search-input { width: 100%; }
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .page-hero { padding: 28px 16px 18px; transform: none; box-shadow: 6px 6px 0 0 #0A0A0A; }
+  .page-hero-left, .page-hero-right { padding-top: 20px; }
+  .page-hero-title { font-size: 3.2rem; }
+  .page-hero-right { width: 100%; align-items: stretch; }
+  .hero-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  .filter-bar { padding: 12px; }
+  .filter-label { width: 100%; margin: 0; }
+  .filter-sep { display: none; }
+
+  .main-layout { grid-template-columns: minmax(0, 1fr); }
+  .txn-bento { padding: 14px; box-shadow: 6px 6px 0 0 #0A0A0A; }
+  .txn-bento-title { font-size: 1.5rem; }
+  .txn-scroll-area { max-height: 65vh; padding-right: 6px; overflow-x: hidden; }
+  .txn-scroll-area::-webkit-scrollbar { width: 8px; }
+
+  .txn-card { padding: 10px; gap: 10px; margin-bottom: 14px; border-width: 3px; }
+  .txn-card, .txn-card:hover, .txn-card:active { transform: none !important; box-shadow: 4px 4px 0 0 #0A0A0A !important; }
+  .txn-icon-box { width: 40px; height: 40px; font-size: 1.2rem; }
+  .txn-merchant { white-space: normal; overflow: visible; font-size: .78rem; }
+  .txn-amount-box { font-size: .8rem; padding: 5px 8px; }
+
+  .summary-card, .breakdown-card, .quickstats-card, .export-card { transform: none; box-shadow: 6px 6px 0 0 #0A0A0A; }
 }
