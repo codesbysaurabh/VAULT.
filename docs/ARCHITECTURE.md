@@ -6,8 +6,8 @@ Vault is a static multi-page app. Pages share a small set of **classic scripts**
 
 | Layer | Files | Responsibility |
 |---|---|---|
-| Utilities | `core/utils.js` | `$`, `$$`, `fmt` (₹ formatting), `esc` (HTML escape), palette, date helpers |
-| Data | `core/seed.js`, `core/store.js` | Demo data; `V.get/save/add/del/limit/addCat/clear/reset` |
+| Utilities | `core/utils.js` | `$`, `$$`, `fmt` (₹ formatting), `esc` (HTML escape), palette, date + month-cycle helpers (`cycleOf`, `cycleLabel`) |
+| Data | `core/seed.js`, `core/store.js` | Demo data; `V.get/save/add/del/limit/removeBudget/addCat/setCycle/clear/reset` |
 | Derivation | `core/stats.js` | `V.stats(state)` — pure function, no DOM |
 | Commentary | `core/insights.js` | `V.insights(stats)` — ordered list of `{p,t,x,tip}` |
 | Shared UI | `core/ui.js` | Toasts, clear-all, header badge |
@@ -18,6 +18,7 @@ Vault is a static multi-page app. Pages share a small set of **classic scripts**
 ```json
 {
   "opening": 3000,
+  "cycleStart": 1,
   "budgets": { "food": 500, "bills": 1800 },
   "cats":    { "food": "🍕", "bills": "🏠" },
   "txns": [
@@ -55,3 +56,11 @@ Only `core/store.js` touches `localStorage`. Replace `get`/`save` with API calls
 ## CSS
 
 `base.css` holds design tokens and the shared shell. Per-page differences are expressed as CSS variables (`--nav-active`, `--badge-bg`, `--bg`, `--shadow-*`) set in each page file's `:root`.
+
+## Month cycle
+
+"This month" is the user's **month cycle**, not necessarily the calendar month. `state.cycleStart` (1–31, default 1) is the day each cycle begins; in months shorter than that day the cycle starts on the month's last day.
+
+- `cycleOf(date, day)` (core/utils.js) returns `{ start, end, next, days }` for the cycle containing `date`; `cycleLabel()` formats it ("Oct 2026" or "Sep 15 – Oct 14, 2026").
+- `V.stats()` derives *everything* month-based from it: spend, income, budgets, previous-cycle comparison, days left, forecast, daily log, and the 3M / YTD charts (which use cycles, not calendar months). Rolling windows (7 days, 8 weeks, streak, heatmap) are unaffected.
+- `V.setCycle(day)` saves the choice. `V.reset()` and `V.clear()` keep it. The ⚙ button in every header (injected by core/ui.js) opens the dialog.

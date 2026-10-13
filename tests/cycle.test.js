@@ -83,17 +83,19 @@ test('streak is 0 with no transactions (no free 90-day streak)', () => {
   assert.ok(st.last14.every((d) => d.none));
 });
 
-test('store: setCycle clamps, and reset/clear keep the preference', () => {
-  const c = env();
+test('store: setCycle clamps; new, reset and cleared stores start the cycle today', () => {
+  const c = env(), today = new Date().getDate();
+  assert.strictEqual(c.V.get().cycleStart, today);   // first load (demo data)
   c.V.setCycle(15);
   assert.strictEqual(c.V.get().cycleStart, 15);
   c.V.setCycle(99);
   assert.strictEqual(c.V.get().cycleStart, 1);
   c.V.setCycle(20);
   c.V.reset(true);
-  assert.strictEqual(c.V.get().cycleStart, 20);
+  assert.strictEqual(c.V.get().cycleStart, today);   // reset demo data
+  c.V.setCycle(20);
   c.V.clear();
-  assert.strictEqual(c.V.get().cycleStart, 20);
+  assert.strictEqual(c.V.get().cycleStart, today);   // cleared data
 });
 
 test('store: ids stay unique when adding quickly', () => {

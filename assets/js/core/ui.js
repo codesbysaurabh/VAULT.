@@ -10,6 +10,8 @@ W.resetDemo=async()=>{if(await confirmBox({title:'Reset to demo data?',text:'You
 
 // Header: the month badge follows the user's cycle, and a ⚙ button opens the cycle dialog.
 const badge=()=>{
+ const cb=$('.cycle-btn'),d=V.get().cycleStart;
+ if(cb){const t=cb.querySelector('.cy-day');if(t)t.textContent=d;cb.title='Your month starts on the '+ord(d)+' — click to change'}
  const b=$('.header-badge');if(!b)return;
  if(b.dataset.m===undefined)b.dataset.m=/20\d\d/.test(b.textContent)?'1':'';
  if(b.dataset.m)b.textContent=(b.textContent[0]=='●'?'● ':'')+V.stats(V.get()).label;
@@ -20,7 +22,7 @@ ready(()=>{
  if(h&&!$('.cycle-btn')){
   const b=document.createElement('button'),bg=$('.header-badge'),w=document.createElement('div');
   b.type='button';b.className='cycle-btn';b.title='Choose when your month starts';b.setAttribute('aria-label','Month cycle settings');
-  b.innerHTML='⚙<span class="lbl"> Cycle</span>';b.onclick=()=>openCycleModal();
+  b.innerHTML='<svg class="cy-ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="17" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M2.5 10h19M7.5 2.5v4M16.5 2.5v4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><text class="cy-day" x="12" y="19" text-anchor="middle" font-size="8.5" font-weight="900" fill="currentColor" font-family="DM Mono,monospace">1</text></svg><span class="lbl">Cycle</span>';b.onclick=()=>openCycleModal();
   w.className='hdr-right';
   if(bg){bg.replaceWith(w);w.append(bg,b)}else{w.append(b);h.append(w)}
  }
@@ -39,7 +41,7 @@ W.openCycleModal=()=>{
   <p class="vm-sub">Pick the day your month starts</p>
   <label class="vm-label" for="vc-day">Start day (1–31)</label>
   <input class="vm-note" id="vc-day" type="number" inputmode="numeric" min="1" max="31" step="1" value="${cur}" autocomplete="off">
-  <div class="vm-quick">${[1,5,10,15,20,25,28].map(n=>`<button type="button" data-d="${n}">${ord(n)}</button>`).join('')}</div>
+  <div class="vm-quick"><button type="button" data-d="${new Date().getDate()}">Today · ${ord(new Date().getDate())}</button>${[1,5,10,15,20,25,28].map(n=>`<button type="button" data-d="${n}">${ord(n)}</button>`).join('')}</div>
   <p class="vm-text" id="vc-prev"></p>
   <div class="vm-err" id="vc-err" role="alert"></div>
   <div class="vm-actions"><button type="button" class="vm-save">SAVE ✓</button><button type="button" class="vm-cancel">Cancel</button></div>

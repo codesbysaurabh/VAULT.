@@ -59,7 +59,7 @@ vault/
 │           ├── budget.js
 │           └── insights.js
 ├── docs/ARCHITECTURE.md
-├── tests/smoke.test.js
+├── tests/                    # smoke.test.js, cycle.test.js
 ├── package.json
 ├── LICENSE
 └── README.md
@@ -74,6 +74,10 @@ user action ─▶ V.add / V.del / V.limit … ─▶ localStorage ─▶ "vault
 ```
 
 State is saved in `localStorage` under the key `vault:v2`. Each page listens for the `vault` event (also fired by the `storage` event, so other open tabs stay in sync) and re-renders from `V.stats()`. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the data model and how to extend it.
+
+## Month cycle
+
+Use the **⚙ Cycle** button in the header to choose the day your month starts (e.g. payday on the 25th). Budgets, spend, "this month" labels, the previous-month comparison, forecast, daily log and the 3M / YTD charts all follow it. Months shorter than the chosen day start on their last day.
 
 ## Data
 

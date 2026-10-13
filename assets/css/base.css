@@ -300,7 +300,9 @@ html, body { overflow-x: hidden; }
   /* header: logo + badge on row 1, swipeable nav on row 2 */
   .page-wrapper .site-header { flex-wrap: wrap; gap: 10px; padding: 12px 14px; box-shadow: 4px 4px 0 0 #0A0A0A; }
   .page-wrapper .site-header .site-logo { font-size: 1.7rem; }
-  .page-wrapper .site-header .header-badge { margin-left: auto; }
+  .page-wrapper .site-header .hdr-right { margin-left: auto; min-width: 0; }
+  .hdr-right .header-badge { max-width: 52vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cycle-btn .lbl { display: none; }
   .site-header nav { order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; }
   .site-header nav::-webkit-scrollbar { display: none; }
   .site-header .nav-pills { display: flex; width: max-content; gap: 8px; }
@@ -310,4 +312,27 @@ html, body { overflow-x: hidden; }
   input.form-input, input.search-input { font-size: 16px; } /* stops iOS zoom-on-focus */
   #vt { left: 12px; right: 12px; bottom: 16px; text-align: center; }
   .vm-box { padding: 20px; max-height: 92vh; overflow-y: auto; }
+}
+
+/* ── Month cycle button (injected by core/ui.js) ── */
+.hdr-right { display: flex; align-items: center; gap: 8px; }
+.cycle-btn {
+  padding: 4px 11px;
+  border: var(--border-width) solid var(--white);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--white);
+  font: 700 0.7rem 'DM Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+.cycle-btn:hover { background: var(--neon-green); color: var(--black); border-color: var(--neon-green); }
+
+/* Visible keyboard focus (page styles set outline:none on buttons) */
+:focus-visible { outline: 3px solid var(--hot-pink) !important; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 }

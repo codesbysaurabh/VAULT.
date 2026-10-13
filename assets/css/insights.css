@@ -1030,7 +1030,7 @@ mark.cyan  { background: var(--electric-blue); color: var(--black); }
 
 /* bar grow-up animation */
 @keyframes barGrow {
-  from { height: 0 !important; }
+  from { height: 0; }
   to   { height: var(--h, 50%); }
 }
 

@@ -240,18 +240,18 @@ SUMMARY STAT CARDS
   grid-column: span 3;
 }
 
-.stat-card:nth-child(1) { background: var(--hot-pink); color: var(--white); }
+.stat-card:nth-of-type(1) { background: var(--hot-pink); color: var(--white); }
 
-.stat-card:nth-child(2) { background: var(--electric-blue); transform: rotate(0.5deg); }
+.stat-card:nth-of-type(2) { background: var(--electric-blue); transform: rotate(0.5deg); }
 
-.stat-card:nth-child(3) { background: var(--neon-green); transform: rotate(-0.4deg); }
+.stat-card:nth-of-type(3) { background: var(--neon-green); transform: rotate(-0.4deg); }
 
-.stat-card:nth-child(4) { background: var(--orange); color: var(--white); transform: rotate(0.3deg); }
+.stat-card:nth-of-type(4) { background: var(--orange); color: var(--white); transform: rotate(0.3deg); }
 
 .stat-card .card-label { opacity: 0.7; }
 
-.stat-card:nth-child(1) .card-label,
-.stat-card:nth-child(4) .card-label { color: rgba(255,255,255,0.8); opacity: 1; }
+.stat-card:nth-of-type(1) .card-label,
+.stat-card:nth-of-type(4) .card-label { color: rgba(255,255,255,0.8); opacity: 1; }
 
 .stat-value {
   font-family: 'Bebas Neue', sans-serif;
@@ -712,6 +712,11 @@ RESPONSIVE
   .hero-card  { transform: none; padding: 24px; }
   .hero-card .hero-balance { font-size: clamp(3rem, 16vw, 5rem); }
   .stat-card  { grid-column: span 3; }
-  .nav-pills  { display: none; }
   .site-footer { flex-direction: column; gap: 8px; text-align: center; }
 }
+
+/* extra tag colours */
+.tag-health    { background: #F87171; color: var(--white); }
+.tag-travel    { background: var(--electric-blue); }
+.tag-utilities { background: #94A3B8; color: var(--white); }
+.tag-dining    { background: var(--orange); color: var(--white); }
